@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title>DIY Workshop - Login</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <!-- Favicon -->
+    <link href="/img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link href="/css/font.css" rel="stylesheet">
+
+    <!-- Google Web Fonts -->
+    <link href="/css/main.css" rel="stylesheet">
+    <div class="parent-navbar">
+        <div class="navbar-item header-font"><a class="menu-link" href="/">HOME</a></div>
+        <div class="navbar-item header-font"><a class="menu-link" href="/workshop/home">PROJECTS</a></div>
+        <div class="banner-item banner-font"><a class="menu-link" href="/">MY DIY WORKSHOP</a></div>
+        <div class="navbar-item header-font"><a class="menu-link" href="/signup">SIGN UP</a></div>
+        <div class="navbar-item header-font"><a class="selected-menu" href="/login">LOGIN</a></div>
+    </div>
+</head>
+<body>
+    <div class="diy-centered diy-content-padding header-padding" style="height:74vh">
+        <div class="diy-block-display">
+            <div class="diy-centered">
+                <table border="0px">
+                    <tr>
+                        <td style="padding-top:5px"><img style="height:74vh" src="/images/diy-login.jpg"></td>
+                        <td width="600px">
+                            <div class="diy-full-centered-with-border" style="height:74vh">
+                                <form action="#" th:action="@{/login}" th:object="${user}" method="post">
+                                    <table border="0px">
+                                        <tr>
+                                            <td align="center" class="regular-font">LOGIN</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center" width="370px" class="normal-font">
+                                                <div th:if="${loginErrors != null && loginErrors.errorMessages != null}" style="padding-top:20px;padding-left:20px;padding-right:20px;padding-bottom:2px;">If you don't have an account with us,<a class="in-text-link colored-font" href="/signup">sign-up</a>for a free account.</div>
+                                                <div th:unless="${loginErrors != null && loginErrors.errorMessages != null}" style="padding:20px">If you don't have an account with us,<a class="in-text-link colored-font" href="/signup">sign-up</a>for a free account.</div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center">
+                                                <div th:if="${loginErrors != null && loginErrors.errorMessages != null}">
+                                                    <div th:each="e : ${loginErrors.errorMessages}">
+                                                        <div class="error-font" style="height:10px;padding:4px" th:text="${e}"></div>
+                                                    </div>
+                                                </div>
+                                                <table>
+                                                    <tr>
+                                                        <td width="300px">
+                                                            <div th:if="${loginErrors != null && loginErrors.fieldErrorMessages != null && loginErrors.fieldErrorMessages['userName'] != null}">
+                                                                <input th:field="*{userName}" class="form-control-error text-box" type="text" placeholder="Username">
+                                                            </div>
+                                                            <div th:unless="${loginErrors != null && loginErrors.fieldErrorMessages != null && loginErrors.fieldErrorMessages['userName'] != null}">
+                                                                <input th:field="*{userName}" class="form-control text-box" type="text" placeholder="Username">
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center">
+                                                <table>
+                                                    <tr>
+                                                        <td width="300px">
+                                                            <div th:if="${loginErrors != null && loginErrors.fieldErrorMessages != null && loginErrors.fieldErrorMessages['password'] != null}">
+                                                                <input th:field="*{password}" class="text-box form-control-error" type="password" placeholder="Password">
+                                                            </div>
+                                                            <div th:unless="${loginErrors != null && loginErrors.fieldErrorMessages != null && loginErrors.fieldErrorMessages['password'] != null}">
+                                                                <input th:field="*{password}" class="text-box form-control" type="password" placeholder="Password">
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td height="20px"></td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center">
+                                                <input class="button btn" type="submit" value="Login">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="diy-centered footer-navbar">
+        <div class="footer-navbar-item footer-font">
+            <table>
+                <tr align="center">
+                    <td>&#169; My DIY Workshop</td>
+                </tr>
+                <tr align="center">
+                    <td>raja.jeswanth@yahoo.com | +1 (612) 860-5364</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>

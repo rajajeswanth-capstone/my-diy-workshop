@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title>DIY Workshop - Projects</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <!-- Favicon -->
+    <link href="/img/favicon.ico" rel="icon">
+
+    <!-- Javascripts -->
+    <script src="/js/instruction.js"></script>
+
+    <!-- Google Web Fonts -->
+    <link href="/css/font.css" rel="stylesheet">
+
+    <!-- Google Web Fonts -->
+    <link href="/css/main.css" rel="stylesheet">
+    <div class="parent-navbar">
+        <div class="navbar-item header-font"><a class="menu-link" href="/">HOME</a></div>
+        <div class="navbar-item header-font"><a class="menu-link" href="/workshop/home">PROJECTS</a></div>
+        <div class="banner-item banner-font"><a class="menu-link" href="/">MY DIY WORKSHOP</a></div>
+        <div class="navbar-item header-font"><a class="menu-link" href="/signup">SIGN UP</a></div>
+        <div th:if="${loggedInUser != null && loggedInUser.name != null}" class="navbar-item header-font"><a class="menu-link" href="/logout">LOGOUT</a></div>
+        <div th:unless="${loggedInUser != null && loggedInUser.name != null}" class="navbar-item header-font"><a class="menu-link" href="/login">LOGIN</a></div>
+    </div>
+</head>
+<body onload="javascript:initInstruction()">
+<div class="diy-centered header-padding height-80v">
+    <input type="hidden" id="instructionsSize" th:value="${#lists.size(projectDetail.instructions)}" value="0" />
+    <div th:if="${addProjectInstructionErrors != null}">
+        <input type="hidden" id="addInstructionErrors" value="true" />
+    </div>
+    <div th:unless="${addProjectInstructionErrors != null}">
+        <input type="hidden" id="addInstructionErrors" value="false" />
+    </div>
+
+    <table border="0">
+        <tr>
+            <td valign="top">
+                <div class="diy-centered">
+                    <div class="diy-block-display">
+                        <div class="diy-full-centered" style="height:7vh">
+                            <table style="background-color:#E67E22;padding:10px;height:40px;width:768px">
+                                <tr>
+                                    <td align="center" width="33.3%"><a href="#" th:href="@{'/workshop/project/detail/' + ${projectDetail.id}}" class="menu-link header-font selected-sub-menu">instructions</a></td>
+                                    <td align="center" width="33.3%"><a href="#" th:href="@{'/workshop/project/detail/material/' + ${projectDetail.id}}" class="menu-link header-font">material</a></td>
+                                    <td align="center" width="33.3%"><a href="#" th:href="@{'/workshop/project/media/' + ${projectDetail.id}}" class="menu-link header-font">media</a></td>
+                                    <td align="center" width="10%"><a href="/workshop/home" title="Back To Projects" class="menu-link header-font"><img alt="Back To Projects" src="/images/back-to-projects.png" width="15px" height="15px"></a></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="diy-centered" style="height:6vh">
+                            <table>
+                                <tr>
+                                    <td align="center" class="regular-font">PROJECT</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="diy-full-centered">
+                            <table width="768px">
+                                <tr>
+                                    <td align="center" width="100%" height="50vh">
+                                        <span class="regular-font" th:text="${projectDetail.title}"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" width="100%" height="40vh">
+                                        <span class="normal-font" th:text="${projectDetail.shortDescription}"></span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+<!--                        <div class="diy-centered" style="width:768px;">-->
+<!--                            <div id="hasDescription" th:hidden="${projectDetail.description == null}" class="div-absolute-position" style="height:14vh;">-->
+<!--                                <table width="768px">-->
+<!--                                    <tr>-->
+<!--                                        <td align="center" colspan="2">-->
+<!--                                            <div class="diy-full-centered-with-border normal-font" style="width:98%;height:6.5vh"><span id="projectDescription" th:text="${projectDetail.description}"></span></div>-->
+<!--                                        </td>-->
+<!--                                    </tr>-->
+<!--                                    <tr>-->
+<!--                                        <td align="right">-->
+<!--                                            <a href="#" onclick="javascript:editDescription()"><input id="editDescription" class="button btn" type="button" style="width:135px;height:6.6vh" value="Edit"></a>-->
+<!--                                        </td>-->
+<!--                                        <td align="left">-->
+<!--                                            <a href="#" th:href="@{'/workshop/project/' + ${projectDetail.id} + '/description/delete'}"><input id="deleteDescription" class="button btn" type="button" style="width:145px;height:6.6vh" value="Delete"></a>-->
+<!--                                        </td>-->
+<!--                                    </tr>-->
+<!--                                </table>-->
+<!--                            </div>-->
+<!--                            <div id="noDescription" th:hidden="${projectDetail.description != null}" class="div-absolute-position" style="height:22vh;">-->
+<!--                                <form action="#" th:action="@{'/workshop/project/' + ${projectDetail.id} + '/description/add'}" th:object="${addProjectDescription}" method="post">-->
+<!--                                    <table width="768px">-->
+<!--                                        <tr>-->
+<!--                                            <td align="center" width="598px">-->
+<!--                                                <textarea th:field="*{description}" class="form-control-textarea text-area" rows="5" placeholder="Description"></textarea>-->
+<!--                                            </td>-->
+<!--                                        </tr>-->
+<!--                                        <tr>-->
+<!--                                            <td align="center">-->
+<!--                                                <input id="addDescription" class="button btn" type="submit" style="width:150px;height:6.6vh" value="Set">-->
+<!--                                                <input type="hidden" name="id" th:value="${projectDetail.id}" />-->
+<!--                                            </td>-->
+<!--                                        </tr>-->
+<!--                                    </table>-->
+<!--                                </form>-->
+<!--                            </div>-->
+<!--                        </div>-->
+                        <div class="diy-centered" style="height:6vh">
+                            <table width="768px">
+                                <tr>
+                                    <td align="center" width="100px"></td>
+                                    <td align="center" class="regular-font">INSTRUCTIONS</td>
+                                    <td align="right" th:if="${!session.isSharedProject}"><a href="#" title="Add Instruction"><img alt="Edit" src="/images/add-instruction.png" width="30px" height="30px" onclick="javascript:addInstruction()"></a></td>
+                                    <td align="right" width="100px" th:unless="${!session.isSharedProject}"></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div id="instruction">
+                            <div id="createInstruction" class="div-absolute-position" style="width:760px;display:none;">
+                                <div class="diy-centered" style="height:6vh">
+                                    <table>
+                                        <tr>
+                                            <td align="center" class="regular-font">ADD</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <form action="#" th:action="@{'/workshop/project/' + ${projectDetail.id} + '/instruction/add'}" th:object="${addProjectInstruction}" method="post">
+                                    <input type="hidden" name="id" th:value="${addProjectInstruction.id}" />
+                                    <input type="hidden" name="instructionSequence" th:value="${addProjectInstruction.instructionSequence}" />
+                                    <div class="diy-centered" style="height:8vh">
+                                        <table>
+                                            <tr>
+                                                <td align="center" width="605px">
+                                                    <div th:if="${addProjectInstructionErrors != null && addProjectInstructionErrors.fieldErrorMessages != null && addProjectInstructionErrors.fieldErrorMessages['title'] != null}">
+                                                        <input th:field="*{title}" class="form-control-textbox-error text-box" type="text" placeholder="Instruction Title">
+                                                    </div>
+                                                    <div th:unless="${addProjectInstructionErrors != null && addProjectInstructionErrors.fieldErrorMessages != null && addProjectInstructionErrors.fieldErrorMessages['title'] != null}">
+                                                        <input th:field="*{title}" class="form-control-textbox text-box" type="text" placeholder="Instruction Title">
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="diy-centered" style="height:12vh">
+                                        <table>
+                                            <tr>
+                                                <td align="center" width="598px">
+                                                    <textarea th:field="*{instruction}" class="form-control-textarea text-area" rows="5" placeholder="Instruction Description"></textarea>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="diy-centered" style="height:10vh">
+                                        <table>
+                                            <tr>
+                                                <td align="right">
+                                                    <input id="addInstructionButton" class="button btn" type="submit" style="width:150px" value="Add" onclick="javascript:setInstructionSequence()">
+                                                </td>
+                                                <td align="left">
+                                                    <input id="cancelInstructionButton" class="button btn" type="button" value="Cancel" onclick="javascript:cancelSave()">
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="diy-centered" th:if="${projectDetail.instructions != null && #lists.size(projectDetail.instructions) > 0}">
+                                <div id="instructionList" class="div-absolute-position" style="width:762px">
+                                    <div class="diy-centered" style="padding-top:20px;width:760px;height:42vh;overflow-y:auto">
+                                        <div style="width:100%">
+                                            <table th:each="p : ${projectDetail.instructions}" width="100%">
+                                                <tr>
+                                                    <td class="regular-font" valign="top" th:text="${p.title}"></td>
+                                                    <td width="40" class="normal-font" valign="top" align="right" th:if="${!session.isSharedProject}"><a href="#" title="Edit Material"><img alt="Edit" src="/images/diy-project-edit.png" width="30px" height="30px" onclick="javascript:editInstruction(this)"></a></td>
+                                                    <td width="40" class="normal-font" valign="top" align="right" th:if="${!session.isSharedProject}"><a href="#" title="Delete Instruction" th:href="@{'/workshop/project/' + ${projectDetail.id} + '/instruction/delete/' + ${p.id}}"><img alt="Delete" src="/images/diy-project-delete.png" width="30px" height="30px"></a></td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="450" colspan="3" class="normal-font" valign="top" th:text="${p.instruction}"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <input type="hidden" th:name="@{'idValue'}" th:value="${p.id}" />
+                                                        <input type="hidden" th:name="@{'titleValue'}" th:value="${p.title}" />
+                                                        <input type="hidden" th:name="@{'instructionValue'}" th:value="${p.instruction}" />
+                                                        <input type="hidden" th:name="@{'instructionSequenceValue'}" th:value="${p.instructionSequence}" />
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div th:unless="${projectDetail.instructions != null && #lists.size(projectDetail.instructions) > 0}">
+                                <div id="instructionList" class="div-absolute-position" style="width:760px">
+                                    <table width="100%">
+                                        <tr>
+                                            <td align="center">
+                                                <div class="diy-centered normal-font" style="height:4vh">
+                                                    No Instructions added yet
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="diy-centered footer-navbar">
+    <div class="footer-navbar-item footer-font">
+        <table>
+            <tr align="center">
+                <td>&#169; My DIY Workshop</td>
+            </tr>
+            <tr align="center">
+                <td>raja.jeswanth@yahoo.com | +1 (612) 860-5364</td>
+            </tr>
+        </table>
+    </div>
+</div>
+</body>

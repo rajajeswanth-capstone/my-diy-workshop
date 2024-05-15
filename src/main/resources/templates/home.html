@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title>DIY Workshop - Projects</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <!-- Favicon -->
+    <link href="/img/favicon.ico" rel="icon">
+
+    <!-- Javascripts -->
+    <script src="/js/main.js"></script>
+
+    <!-- Google Web Fonts -->
+    <link href="/css/font.css" rel="stylesheet">
+
+    <!-- Google Web Fonts -->
+    <link href="/css/main.css" rel="stylesheet">
+    <div class="parent-navbar">
+        <div class="navbar-item header-font"><a class="menu-link" href="/">HOME</a></div>
+        <div class="navbar-item header-font"><a class="selected-menu" href="/workshop/home">PROJECTS</a></div>
+        <div class="banner-item banner-font"><a class="menu-link" href="/">MY DIY WORKSHOP</a></div>
+        <div class="navbar-item header-font"><a class="menu-link" href="/signup">SIGN UP</a></div>
+        <div th:if="${loggedInUser != null && loggedInUser.name != null}" class="navbar-item header-font"><a class="menu-link" href="/logout">LOGOUT</a></div>
+        <div th:unless="${loggedInUser != null && loggedInUser.name != null}" class="navbar-item header-font"><a class="menu-link" href="/login">LOGIN</a></div>
+    </div>
+</head>
+<body onload="javascript:initProjects()">
+    <div class="diy-centered header-padding height-80v">
+        <div th:if="${saveProjectDisplaySequence != null}"><input type="hidden" id="currentProject" th:value="${saveProjectDisplaySequence}" /></div>
+        <div th:unless="${saveProjectDisplaySequence != null}"><input type="hidden" id="currentProject" value="1" /></div>
+        <input type="hidden" id="currentSharedProject" value="1" />
+        <input type="hidden" id="projectsSize" th:value="${#lists.size(projects)}" value="0" />
+        <input type="hidden" id="sharedProjectsSize" th:value="${#lists.size(sharedProjects)}" value="0" />
+        <input type="hidden" id="projectListingOperation" th:value="${modelListingOperation}" value="" />
+        <table border="0">
+            <tr>
+                <td valign="middle">
+                    <div id="left-nav" class="diy-full-centered" style="padding-left:20px;padding-right:20px">
+                        <img id="stopArrowLeft" src="/images/end-navigation.jpeg" width="30px" height="30px" style="display:none;padding-bottom:5px">
+                        <a href="#" id="leftArrow" style="display:none;" title="Next Project"><img src="/images/left-arrow.png" width="30px" height="30px" onclick="javascript:previousProject()"></a>
+                    </div>
+                </td>
+                <td valign="middle">
+                    <div id="left-nav-shared" class="diy-full-centered" style="padding-left:16px;padding-right:24px;display:none;">
+                        <img id="stopArrowLeftShared" src="/images/end-navigation.jpeg" width="30px" height="30px" style="display:none;padding-bottom:5px">
+                        <a href="#" id="leftArrowShared" style="display:none;" title="Next Project"><img src="/images/left-arrow.png" width="30px" height="30px" onclick="javascript:previousSharedProject()"></a>
+                    </div>
+                </td>
+                <td valign="top">
+                    <div class="diy-centered">
+                        <div class="diy-block-display">
+                            <div class="diy-centered" style="height:15vh">
+                                <table>
+                                    <tr>
+                                        <td align="center" class="regular-font">PROJECTS</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center" width="600px">
+                                            <select class="dropdown form-control" onchange="javascript:showProjectType(this)">
+                                                <option value="my">My Projects</option>
+                                                <option value="shared">Shared Projects</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div id="projects">
+                                <div id="create" class="div-absolute-position" style="width:608px;display:none;">
+                                    <form action="#" th:action="@{/workshop/project/create}" enctype="multipart/form-data" th:object="${project}" method="post">
+                                        <div class="diy-full-centered" style="height:30vh">
+                                            <input type="hidden" name="id" th:value="${project.id}" />
+                                            <input type="hidden" name="displaySequence" th:value="${project.displaySequence}" />
+                                            <div class="diy-full-centered">
+                                                <table border="0px" style="width:100%;">
+                                                    <tr>
+                                                        <td align="center">
+                                                            <label for="projectImage">
+                                                                <img style="height:19vh" src="/images/upload-project-picture.png" />
+                                                            </label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td align="center" class="normal-font" width="100px">
+                                                            <input type="file" id="projectImage" name="projectImage" onchange="javascript:updateLabel(this)" hidden>
+                                                            <label id="uploadLabel">Upload Project Image</label>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="diy-centered" style="height:8vh">
+                                            <table>
+                                                <tr>
+                                                    <td align="center" width="605px">
+                                                        <div th:if="${saveProjectErrors != null && saveProjectErrors.fieldErrorMessages != null && saveProjectErrors.fieldErrorMessages['title'] != null}">
+                                                            <input th:field="*{title}" class="form-control-textbox-error text-box" type="text" placeholder="Title">
+                                                        </div>
+                                                        <div th:unless="${saveProjectErrors != null && saveProjectErrors.fieldErrorMessages != null && saveProjectErrors.fieldErrorMessages['title'] != null}">
+                                                            <input th:field="*{title}" class="form-control-textbox text-box" type="text" placeholder="Title">
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="diy-centered" style="height:13vh">
+                                            <table>
+                                                <tr>
+                                                    <td align="center" width="598px">
+                                                        <textarea th:field="*{shortDescription}" class="form-control-textarea text-area" rows="5" placeholder="Short Description"></textarea>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="diy-centered" style="height:10vh">
+                                            <table>
+                                                <tr>
+                                                    <td align="right">
+                                                        <input id="addButton" class="button btn" type="submit" style="width:150px" value="Add">
+                                                    </td>
+                                                    <td align="left">
+                                                        <input id="cancelButton" class="button btn" type="button" value="Cancel" onclick="javascript:cancelSave()">
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div th:if="${projects != null}">
+                                    <div th:each="p : ${projects}">
+                                        <div th:id="${p.displaySequence}" class="div-absolute-position" style="width:608px;display:none">
+                                            <input type="hidden" th:id="@{'id' + ${p.displaySequence}}" th:value="${p.id}" />
+                                            <input type="hidden" th:id="@{'title' + ${p.displaySequence}}" th:value="${p.title}" />
+                                            <input type="hidden" th:id="@{'shortDescription' + ${p.displaySequence}}" th:value="${p.shortDescription}" />
+                                            <div style="position:absolute;width:608px">
+                                                <table style="width:100%;padding:10px" border="0">
+                                                    <tr>
+                                                        <td align="right" width="95%"><a href="#" title="Edit Project"><img alt="Delete" src="/images/diy-project-edit.png" width="30px" height="30px" onclick="javascript:editProject()"></a></td>
+                                                        <td align="right"><a href="#" title="Delete Project" th:href="@{'/workshop/project/delete/' + ${p.id}}"><img alt="Delete" src="/images/diy-project-delete.png" width="30px" height="30px"></a></td>
+                                                        <td align="right"><a href="#" title="Add Project"><img alt="Add" src="/images/diy-project-add.png" width="34px" height="34px" onclick="javascript:addProject()"></a></td>
+                                                        <td align="right"><a href="#" title="Share Project"><img alt="Add" src="/images/diy-project-share.png" width="30px" height="30px" onclick="javascript:shareProject()"></a></td>
+                                                        <td align="right"><a href="#" title="Project Details" th:href="@{'/workshop/project/detail/' + ${p.id}}"><img alt="Add" src="/images/diy-project-details.png" width="30px" height="30px"></a></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div class="diy-full-centered" style="height:35vh">
+                                                <div class="diy-full-centered" style="width:98.25%;height:99%">
+                                                    <table border="0px" style="width:100%;">
+                                                        <tr>
+                                                            <td align="center">
+                                                                <img th:src="${p.imageLink}" src="/images/default-project.jpg" width="600px" style="object-fit:cover;height:35vh">
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="diy-centered" style="height:8vh">
+                                                <table>
+                                                    <tr>
+                                                        <td align="center" width="595px" class="carousel-nav">
+                                                            <span class="normal-font" th:text="@{${p.displaySequence} + ' / ' + ${#lists.size(projects)}}"></span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td align="center" width="595px" class="regular-font" th:text="${p.title}">
+                                                            Project 1
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div class="diy-centered" style="overflow-y:auto;height:13vh">
+                                                <table>
+                                                    <tr>
+                                                        <td align="center" valign="top" width="598px" class="normal-font" th:text="${p.shortDescription}">
+                                                            This is the description for first project
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="sharedProjects" style="display:none">
+                                <div th:if="${sharedProjects != null && #lists.size(sharedProjects) > 0}">
+                                    <div th:each="p : ${sharedProjects}">
+                                        <div th:id="@{'s' + ${p.displaySequence}}" class="div-absolute-position" style="width:608px;display:none">
+                                            <input type="hidden" th:id="@{'sharedId' + ${p.displaySequence}}" th:value="${p.id}" />
+                                            <input type="hidden" th:id="@{'sharedTitle' + ${p.displaySequence}}" th:value="${p.title}" />
+                                            <input type="hidden" th:id="@{'sharedShortDescription' + ${p.displaySequence}}" th:value="${p.shortDescription}" />
+                                            <div style="position:absolute;width:608px">
+                                                <table style="width:100%;padding:10px" border="0">
+                                                    <tr>
+                                                        <td align="right"><a href="#" title="Project Details" th:href="@{'/workshop/project/detail/' + ${p.id}}"><img alt="Add" src="/images/diy-project-details.png" width="30px" height="30px"></a></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div class="diy-full-centered" style="height:35vh">
+                                                <div class="diy-full-centered" style="width:98.25%;height:99%">
+                                                    <table border="0px" style="width:100%;">
+                                                        <tr>
+                                                            <td align="center">
+                                                                <img th:src="${p.imageLink}" src="/images/default-project.jpg" width="600px" style="object-fit:cover;height:35vh">
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="diy-centered" style="height:8vh">
+                                                <table>
+                                                    <tr>
+                                                        <td align="center" width="595px" class="carousel-nav">
+                                                            <span class="normal-font" th:text="@{${p.displaySequence} + ' / ' + ${#lists.size(sharedProjects)}}"></span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td align="center" width="595px" class="regular-font" th:text="${p.title}">
+                                                            Project 1
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div class="diy-centered" style="overflow-y:auto;height:13vh">
+                                                <table>
+                                                    <tr>
+                                                        <td align="center" valign="top" width="598px" class="normal-font" th:text="${p.shortDescription}">
+                                                            This is the description for first project
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="diy-centered" th:unless="${sharedProjects != null && #lists.size(sharedProjects) > 0}">
+                                    <table style="padding: 20px">
+                                        <tr>
+                                            <td align="center">
+                                                <img src="/images/blank_folder.jpg" style="height:20vh">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="normal-font" align="center">
+                                                There are no shared projects<br /><br />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div>
+                                <div id="share-project" class="div-absolute-position" style="width:608px;display:none">
+                                    <div class="diy-centered">
+                                        <table width="600px">
+                                            <tr>
+                                                <td class="normal-font" align="center" colspan="3" style="padding-bottom:20px">
+                                                    Share your project with one of the registered users below
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <form action="#" th:action="@{/workshop/project/share}" th:object="${shareProject}" method="post">
+                                        <div class="diy-centered" th:if="${sharedUsers != null && #lists.size(sharedUsers) > 0}" style="height:50vh;overflow-y: auto">
+                                            <div class="diy-block-display">
+                                                <input type="hidden" name="projectId" value="" />
+                                                <table width="600px" style="height:5vh">
+                                                    <tr>
+                                                        <td class="success-font" id="success-message" align="center" colspan="3" th:text="${shareProjectSuccess}"></td>
+                                                    </tr>
+                                                    <tr th:each="s : ${sharedUsers}">
+                                                        <td width="30%" style="padding-right:20px" align="right">
+                                                            <input type="radio" name="sharedUserId" th:value="${s.id}">
+                                                        </td>
+                                                        <td width="80px">
+                                                            <img src="/images/diy-user-blue.png" style="height:5vh">
+                                                        </td>
+                                                        <td>
+                                                            <span class="normal-font" th:text="${s.name}"></span>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                <table width="600px" style="padding-top:30px;height:5vh">
+                                                    <tr>
+                                                        <td align="right">
+                                                            <input id="shareButton" class="button btn" type="submit" style="width:150px" value="Share">
+                                                        </td>
+                                                        <td align="left">
+                                                            <input id="cancelShareButton" class="button btn" type="button" value="Done" onclick="javascript:cancelShare()">
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <div class="diy-centered" th:unless="${sharedUsers != null && #lists.size(sharedUsers) > 0}" style="height:50vh">
+                                        <table style="padding: 20px">
+                                            <tr>
+                                                <td align="center">
+                                                    <img src="/images/diy-share-no-user.png" style="height:20vh">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="normal-font" align="center">
+                                                    There are no other users to share the project with. Invite friends to join by using the<a class="in-text-link colored-font" href="/signup">sign-up</a>link.
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td align="center">
+                                                    <input id="cancelShare" class="button btn" type="button" value="Back" onclick="javascript:cancelShare()">
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td valign="middle">
+                    <div id="right-nav" class="diy-full-centered" style="padding-left:20px;padding-right:20px">
+                        <img id="stopArrowRight" src="/images/end-navigation.jpeg" width="30px" height="30px" style="display:none;padding-bottom:5px">
+                        <a id="rightArrow" style="display:none;" href="#" title="Next Project">
+                            <img src="/images/right-arrow.png" width="30px" height="30px" onclick="javascript:nextProject()">
+                        </a>
+                    </div>
+                </td>
+                <td valign="middle">
+                    <div id="right-nav-shared" class="diy-full-centered" style="padding-left:16px;padding-right:24px;display:none">
+                        <img id="stopArrowRightShared" src="/images/end-navigation.jpeg" width="30px" height="30px" style="display:none;padding-bottom:5px">
+                        <a id="rightArrowShared" style="display:none;" href="#" title="Next Project">
+                            <img src="/images/right-arrow.png" width="30px" height="30px" onclick="javascript:nextSharedProject()">
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="diy-centered footer-navbar">
+        <div class="footer-navbar-item footer-font">
+            <table>
+                <tr align="center">
+                    <td>&#169; My DIY Workshop</td>
+                </tr>
+                <tr align="center">
+                    <td>raja.jeswanth@yahoo.com | +1 (612) 860-5364</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>

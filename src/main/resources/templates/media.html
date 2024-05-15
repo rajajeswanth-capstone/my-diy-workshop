@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title>DIY Workshop - Media</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <!-- Favicon -->
+    <link href="/img/favicon.ico" rel="icon">
+
+    <!-- Javascripts -->
+    <script src="/js/media.js"></script>
+
+    <!-- Google Web Fonts -->
+    <link href="/css/font.css" rel="stylesheet">
+
+    <!-- Google Web Fonts -->
+    <link href="/css/main.css" rel="stylesheet">
+    <div class="parent-navbar">
+        <div class="navbar-item header-font"><a class="menu-link" href="/">HOME</a></div>
+        <div class="navbar-item header-font"><a class="menu-link" href="/workshop/home">PROJECTS</a></div>
+        <div class="banner-item banner-font"><a class="menu-link" href="/">MY DIY WORKSHOP</a></div>
+        <div class="navbar-item header-font"><a class="menu-link" href="/signup">SIGN UP</a></div>
+        <div th:if="${loggedInUser != null && loggedInUser.name != null}" class="navbar-item header-font"><a class="menu-link" href="/logout">LOGOUT</a></div>
+        <div th:unless="${loggedInUser != null && loggedInUser.name != null}" class="navbar-item header-font"><a class="menu-link" href="/login">LOGIN</a></div>
+    </div>
+</head>
+<body onload="javascript:initMedia()">
+    <div class="diy-centered header-padding height-80v">
+        <div th:if="${savePictureDisplaySequence != null}">
+            <input type="hidden" id="currentPicture" th:value="${savePictureDisplaySequence}" />
+        </div>
+        <div th:unless="${savePictureDisplaySequence != null}">
+            <input type="hidden" id="currentPicture" value="1" />
+        </div>
+        <div th:if="${saveVideoDisplaySequence != null}">
+            <input type="hidden" id="currentVideo" th:value="${saveVideoDisplaySequence}" />
+        </div>
+        <div th:unless="${saveVideoDisplaySequence != null}">
+            <input type="hidden" id="currentVideo" value="1" />
+        </div>
+        <div th:if="${saveDocumentDisplaySequence != null}">
+            <input type="hidden" id="currentDocument" th:value="${saveDocumentDisplaySequence}" />
+        </div>
+        <div th:unless="${saveDocumentDisplaySequence != null}">
+            <input type="hidden" id="currentDocument" value="1" />
+        </div>
+        <div th:if="${saveOtherDisplaySequence != null}">
+            <input type="hidden" id="currentOther" th:value="${saveOtherDisplaySequence}" />
+        </div>
+        <div th:unless="${saveOtherDisplaySequence != null}">
+            <input type="hidden" id="currentOther" value="1" />
+        </div>
+        <div th:if="${saveWebLinkDisplaySequence != null}">
+            <input type="hidden" id="currentWeblink" th:value="${saveWebLinkDisplaySequence}" />
+        </div>
+        <div th:unless="${saveWebLinkDisplaySequence != null}">
+            <input type="hidden" id="currentWeblink" value="1" />
+        </div>
+        <input type="hidden" id="picturesSize" th:value="${#lists.size(projectDetail.imageResources)}" value="0" />
+        <input type="hidden" id="videosSize" th:value="${#lists.size(projectDetail.videoResources)}" value="0" />
+        <input type="hidden" id="documentsSize" th:value="${#lists.size(projectDetail.documentResources)}" value="0" />
+        <input type="hidden" id="otherMediaSize" th:value="${#lists.size(projectDetail.otherResources)}" value="0" />
+        <input type="hidden" id="weblinksSize" th:value="${#lists.size(projectDetail.webResources)}" value="0" />
+        <input type="hidden" id="mediaListingOperation" th:value="${mediaListingOperation}" value="" />
+        <input type="hidden" id="isSharedProject" th:value="${session.isSharedProject}" value="" />
+
+        <table border="0">
+            <tr>
+                <td valign="middle">
+                    <div id="left-nav" class="diy-full-centered" style="padding-left:20px;padding-right:20px">
+                        <img id="stopArrowLeft" src="/images/end-navigation.jpeg" width="30px" height="30px" style="display:none;padding-bottom:5px">
+                        <a href="#" id="leftArrow" style="display:none;" title="Next Project"><img src="/images/left-arrow.png" width="30px" height="30px" onclick="javascript:previousItem()"></a>
+                    </div>
+                </td>
+                <td valign="middle">
+                    <div id="left-nav-shared" class="diy-full-centered" style="padding-left:16px;padding-right:24px;display:none;">
+                        <img id="stopArrowLeftShared" src="/images/end-navigation.jpeg" width="30px" height="30px" style="display:none;padding-bottom:5px">
+                        <a href="#" id="leftArrowShared" style="display:none;" title="Next Project"><img src="/images/left-arrow.png" width="30px" height="30px" onclick="javascript:previousSharedProject()"></a>
+                    </div>
+                </td>
+                <td valign="top">
+                    <div class="diy-centered">
+                        <div class="diy-block-display">
+                            <div class="diy-full-centered" style="height:7vh">
+                                <table style="background-color:#E67E22;padding:10px;height:40px;width:768px">
+                                    <tr>
+                                        <td align="center" width="33.3%"><a href="#" th:href="@{'/workshop/project/detail/' + ${projectDetail.id}}" class="menu-link header-font">instructions</a></td>
+                                        <td align="center" width="33.3%"><a href="#" th:href="@{'/workshop/project/detail/material/' + ${projectDetail.id}}" class="menu-link header-font">material</a></td>
+                                        <td align="center" width="33.3%"><a href="#" th:href="@{'/workshop/project/media/' + ${projectDetail.id}}" class="menu-link header-font selected-sub-menu">media</a></td>
+                                        <td align="center" width="10%"><a href="/workshop/home" title="Back To Projects" class="menu-link header-font"><img alt="Back To Projects" src="/images/back-to-projects.png" width="15px" height="15px"></a></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="diy-centered" style="height:15vh">
+                                <table>
+                                    <tr>
+                                        <td align="center" class="regular-font">MEDIA</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center" width="600px">
+                                            <select id="mediaType" class="dropdown form-control" onchange="javascript:showMediaType(this)">
+                                                <option value="pictures">Pictures</option>
+                                                <option value="videos">Videos</option>
+                                                <option value="documents">Files</option>
+                                                <option value="weblinks">Weblinks</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div id="pictures">
+                                <div id="createPicture" class="div-absolute-position div-absolute-position-centered" style="width:608px;display:none;">
+                                    <form action="#" th:action="@{'/workshop/project/' + ${projectDetail.id} + '/localresource/add'}" enctype="multipart/form-data" th:object="${addProjectLocalResource}" method="post">
+                                        <div class="diy-full-centered" style="height:30vh">
+                                            <input type="hidden" name="id" th:value="${addProjectLocalResource.id}" />
+                                            <input type="hidden" name="localResourceSequence" th:value="${addProjectLocalResource.localResourceSequence}" />
+                                            <input type="hidden" name="displaySequence" th:value="${addProjectLocalResource.displaySequence}" />
+                                            <input type="hidden" name="type" th:value="LOCAL_RESOURCE" />
+                                            <input type="hidden" name="resourceType" th:value="IMAGE" />
+                                            <div class="diy-full-centered">
+                                                <table border="0px" style="width:100%;">
+                                                    <tr>
+                                                        <td align="center">
+                                                            <label for="localPictureFile">
+                                                                <img style="height:25vh" src="/images/upload_image.png" />
+                                                            </label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td align="left" class="normal-font" width="100px">
+                                                            <input type="file" id="localPictureFile" name="localFile" onchange="javascript:updateLabel(this, 'pictureLabel')" hidden>
+                                                            <label id="pictureLabel" style="padding-left:30px;">Upload Picture</label>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="diy-centered" style="height:8vh">
+                                            <table>
+                                                <tr>
+                                                    <td align="center" width="605px">
+                                                        <div th:if="${addProjectLocalResourceErrors != null && addProjectLocalResourceErrors.fieldErrorMessages != null && addProjectLocalResourceErrors.fieldErrorMessages['title'] != null}">
+                                                            <input th:field="*{title}" class="form-control-textbox-error text-box" type="text" placeholder="Title">
+                                                        </div>
+                                                        <div th:unless="${addProjectLocalResourceErrors != null && addProjectLocalResourceErrors.fieldErrorMessages != null && addProjectLocalResourceErrors.fieldErrorMessages['title'] != null}">
+                                                            <input th:field="*{title}" class="form-control-textbox text-box" type="text" placeholder="Title">
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="diy-centered" style="height:10.5vh">
+                                            <table>
+                                                <tr>
+                                                    <td align="center" width="598px">
+                                                        <textarea th:field="*{description}" class="form-control-textarea text-area" rows="5" placeholder="Description"></textarea>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="diy-centered" style="height:10vh">
+                                            <table>
+                                                <tr>
+                                                    <td align="right">
+                                                        <input id="addPictureButton" class="button btn" type="submit" style="width:150px" value="Add" onclick="javascript:setSequence('pictures')">
+                                                    </td>
+                                                    <td align="left">
+                                                        <input id="cancelPictureButton" class="button btn" type="button" value="Cancel" onclick="javascript:cancelSave('pictures')">
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div th:if="${projectDetail.imageResources != null}">
+                                    <div th:each="p : ${projectDetail.imageResources}">
+                                        <div th:id="@{'picture' + ${p.displaySequence}}" class="div-absolute-position div-absolute-position-centered" style="width:608px;display:none">
+                                            <input type="hidden" th:id="@{'pictureId' + ${p.displaySequence}}" th:value="${p.id}" />
+                                            <input type="hidden" th:id="@{'pictureTitle' + ${p.displaySequence}}" th:value="${p.title}" />
+                                            <input type="hidden" th:id="@{'pictureDescription' + ${p.displaySequence}}" th:value="${p.description}" />
+                                            <input type="hidden" th:id="@{'pictureDisplaySequence' + ${p.displaySequence}}" th:value="${p.displaySequence}" />
+                                            <input type="hidden" th:id="@{'pictureLocalResourceSequence' + ${p.displaySequence}}" th:value="${p.localResourceSequence}" />
+                                            <div style="position:absolute;width:608px">
+                                                <table style="width:100%;padding:10px" border="0">
+                                                    <tr>
+                                                        <td align="right" width="95%"><a href="#" title="Edit Picture" th:if="${!session.isSharedProject}"><img alt="Delete" src="/images/diy-project-edit.png" width="30px" height="30px" onclick="javascript:editResourceTypeElement('picture')"></a></td>
+                                                        <td align="right" th:if="${!session.isSharedProject}"><a href="#" title="Delete Picture" th:href="@{'/workshop/project/' + ${projectDetail.id} + '/localresource/delete/' + ${p.id} + '/' + ${p.resourceType}}"><img alt="Delete" src="/images/diy-project-delete.png" width="30px" height="30px"></a></td>
+                                                        <td align="right" th:if="${!session.isSharedProject}"><a href="#" title="Add Picture"><img alt="Add" src="/images/diy-project-add.png" width="34px" height="34px" onclick="javascript:addResourceTypeElement('picture')"></a></td>
+                                                        <td align="right"><a href="#" title="Open Picture" th:href="@{'/workshop/project/' + ${projectDetail.id} + '/localresource/view/' + ${p.id} + '/' + ${p.resourceType} + '/' + ${p.displaySequence}}"><img alt="Add" src="/images/open-file.png" width="31px" height="31px"></a></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div class="diy-full-centered" style="height:35vh">
+                                                <div class="diy-full-centered" style="width:98.25%;height:99%">
+                                                    <table border="0px" style="width:100%;">
+                                                        <tr>
+                                                            <td align="center">
+                                                                <img th:src="${p.link}" src="/images/default-picture.jpg" width="600px" style="object-fit:cover;height:35vh">
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="diy-centered" style="height:8vh">
+                                                <table>
+                                                    <tr>
+                                                        <td align="center" width="595px" class="carousel-nav">
+                                                            <span class="normal-font" th:text="@{${p.displaySequence} + ' / ' + ${#lists.size(projectDetail.imageResources)}}"></span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td align="center" width="595px" class="regular-font" th:text="${p.title}">
+                                                            Picture Title
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div class="diy-centered" style="overflow-y:auto;height:13vh">
+                                                <table>
+                                                    <tr>
+                                                        <td align="center" valign="top" width="598px" class="normal-font" th:text="${p.description}">
+                                                            This is the description of the picture
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="pictureNoMedia" class="div-absolute-position div-absolute-position-centered" style="width:608px;display:none;">
+                                    <table width="100%">
+                                        <tr>
+                                            <td align="center" class="normal-font">No media to view</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center">
+                                                <img src="/images/no-media.png">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div id="videos">
+                                <div id="createVideo" class="div-absolute-position div-absolute-position-centered" style="width:608px;display:none;">
+                                    <form action="#" th:action="@{'/workshop/project/' + ${projectDetail.id} + '/localresource/add'}" enctype="multipart/form-data" th:object="${addProjectLocalResource}" method="post">
+                                        <div class="diy-full-centered" style="height:30vh">
+                                            <input type="hidden" name="id" th:value="${addProjectLocalResource.id}" />
+                                            <input type="hidden" name="localResourceSequence" th:value="${addProjectLocalResource.localResourceSequence}" />
+                                            <input type="hidden" name="displaySequence" th:value="${addProjectLocalResource.displaySequence}" />
+                                            <input type="hidden" name="type" th:value="LOCAL_RESOURCE" />
+                                            <input type="hidden" name="resourceType" th:value="VIDEO" />
+                                            <div class="diy-full-centered">
+                                                <table border="0px" style="width:100%;">
+                                                    <tr>
+                                                        <td align="center">
+                                                            <label for="localVideoFile">
+                                                                <img style="height:25vh" src="/images/upload-video.png" />
+                                                            </label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td align="left" class="normal-font" width="100px">
+                                                            <input type="file" id="localVideoFile" name="localFile" onchange="javascript:updateLabel(this, 'videoLabel')" hidden>
+                                                            <label id="videoLabel" style="padding-left:33px">Upload Video</label>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="diy-centered" style="height:8vh">
+                                            <table>
+                                                <tr>
+                                                    <td align="center" width="605px">
+                                                        <div th:if="${addProjectLocalResourceErrors != null && addProjectLocalResourceErrors.fieldErrorMessages != null && addProjectLocalResourceErrors.fieldErrorMessages['title'] != null}">
+                                                            <input th:field="*{title}" class="form-control-textbox-error text-box" type="text" placeholder="Title">
+                                                        </div>
+                                                        <div th:unless="${addProjectLocalResourceErrors != null && addProjectLocalResourceErrors.fieldErrorMessages != null && addProjectLocalResourceErrors.fieldErrorMessages['title'] != null}">
+                                                            <input th:field="*{title}" class="form-control-textbox text-box" type="text" placeholder="Title">
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="diy-centered" style="height:10.5vh">
+                                            <table>
+                                                <tr>
+                                                    <td align="center" width="598px">
+                                                        <textarea th:field="*{description}" class="form-control-textarea text-area" rows="5" placeholder="Description"></textarea>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="diy-centered" style="height:10vh">
+                                            <table>
+                                                <tr>
+                                                    <td align="right">
+                                                        <input id="addVideoButton" class="button btn" type="submit" style="width:150px" value="Add" onclick="javascript:setSequence('videos')">
+                                                    </td>
+                                                    <td align="left">
+                                                        <input id="cancelVideoButton" class="button btn" type="button" value="Cancel" onclick="javascript:cancelSave('videos')">
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div th:if="${projectDetail.videoResources != null}">
+                                    <div th:each="p : ${projectDetail.videoResources}">
+                                        <div th:id="@{'video' + ${p.displaySequence}}" class="div-absolute-position div-absolute-position-centered" style="width:608px;display:none">
+                                            <input type="hidden" th:id="@{'videoId' + ${p.displaySequence}}" th:value="${p.id}" />
+                                            <input type="hidden" th:id="@{'videoTitle' + ${p.displaySequence}}" th:value="${p.title}" />
+                                            <input type="hidden" th:id="@{'videoDescription' + ${p.displaySequence}}" th:value="${p.description}" />
+                                            <input type="hidden" th:id="@{'videoDisplaySequence' + ${p.displaySequence}}" th:value="${p.displaySequence}" />
+                                            <input type="hidden" th:id="@{'videoLocalResourceSequence' + ${p.displaySequence}}" th:value="${p.localResourceSequence}" />
+                                            <div class="diy-full-centered" style="height:35vh">
+                                                <div class="diy-full-centered" style="width:98.25%;height:99%">
+                                                    <table border="0px" style="width:100%;">
+                                                        <tr>
+                                                            <td align="center">
+                                                                <video controls="controls" src="#" th:src="${p.link}" style="height:34.5vh">
+                                                                    Your browser does not support the HTML5 Video element.
+                                                                </video>
+<!--                                                                <img src="/images/default-video.png" style="object-fit:cover;height:25vh">-->
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                                <div  th:if="${!session.isSharedProject}" style="position:absolute;width:608px;z-index=10;top:0px">
+                                                    <table style="width:100%;padding:10px" border="0">
+                                                        <tr>
+                                                            <td align="right" width="95%"><a href="#" title="Edit Video" th:if="${!session.isSharedProject}"><img alt="Delete" src="/images/diy-project-edit.png" width="30px" height="30px" onclick="javascript:editResourceTypeElement('video')"></a></td>
+                                                            <td align="right" th:if="${!session.isSharedProject}"><a href="#" title="Delete Video" th:href="@{'/workshop/project/' + ${projectDetail.id} + '/localresource/delete/' + ${p.id} + '/' + ${p.resourceType}}"><img alt="Delete" src="/images/diy-project-delete.png" width="30px" height="30px"></a></td>
+                                                            <td align="right" th:if="${!session.isSharedProject}"><a href="#" title="Add Video"><img alt="Add" src="/images/diy-project-add.png" width="34px" height="34px" onclick="javascript:addResourceTypeElement('video')"></a></td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="diy-centered" style="height:8vh">
+                                                <table>
+                                                    <tr>
+                                                        <td align="center" width="595px" class="carousel-nav">
+                                                            <span class="normal-font" th:text="@{${p.displaySequence} + ' / ' + ${#lists.size(projectDetail.videoResources)}}"></span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td align="center" width="595px" class="regular-font" th:text="${p.title}">
+                                                            Video Title
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div class="diy-centered" style="overflow-y:auto;height:13vh">
+                                                <table>
+                                                    <tr>
+                                                        <td align="center" valign="top" width="598px" class="normal-font" th:text="${p.description}">
+                                                            This is the description of the video
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="videoNoMedia" class="div-absolute-position div-absolute-position-centered" style="width:608px;display:none;">
+                                    <table width="100%">
+                                        <tr>
+                                            <td align="center" class="normal-font">No media to view</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center">
+                                                <img src="/images/no-media.png">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div id="documents">
+                                <div id="createDocument" class="div-absolute-position div-absolute-position-centered" style="width:608px;display:none;">
+                                    <form action="#" th:action="@{'/workshop/project/' + ${projectDetail.id} + '/localresource/add'}" enctype="multipart/form-data" th:object="${addProjectLocalResource}" method="post">
+                                        <div class="diy-full-centered" style="height:30vh">
+                                            <input type="hidden" name="id" th:value="${addProjectLocalResource.id}" />
+                                            <input type="hidden" name="localResourceSequence" th:value="${addProjectLocalResource.localResourceSequence}" />
+                                            <input type="hidden" name="displaySequence" th:value="${addProjectLocalResource.displaySequence}" />
+                                            <input type="hidden" name="type" th:value="LOCAL_RESOURCE" />
+                                            <input type="hidden" name="resourceType" th:value="DOCUMENT" />
+                                            <div class="diy-full-centered">
+                                                <table border="0px" style="width:100%;">
+                                                    <tr>
+                                                        <td align="center">
+                                                            <label for="localDocumentFile">
+                                                                <img style="height:25vh" src="/images/upload-file.png" />
+                                                            </label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td align="left" class="normal-font" width="100px">
+                                                            <input type="file" id="localDocumentFile" name="localFile" onchange="javascript:updateLabel(this, 'documentLabel')" hidden>
+                                                            <label id="documentLabel" style="padding-left:38px;">Upload File</label>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="diy-centered" style="height:8vh">
+                                            <table>
+                                                <tr>
+                                                    <td align="center" width="605px">
+                                                        <div th:if="${addProjectLocalResourceErrors != null && addProjectLocalResourceErrors.fieldErrorMessages != null && addProjectLocalResourceErrors.fieldErrorMessages['title'] != null}">
+                                                            <input th:field="*{title}" class="form-control-textbox-error text-box" type="text" placeholder="Title">
+                                                        </div>
+                                                        <div th:unless="${addProjectLocalResourceErrors != null && addProjectLocalResourceErrors.fieldErrorMessages != null && addProjectLocalResourceErrors.fieldErrorMessages['title'] != null}">
+                                                            <input th:field="*{title}" class="form-control-textbox text-box" type="text" placeholder="Title">
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="diy-centered" style="height:10.5vh">
+                                            <table>
+                                                <tr>
+                                                    <td align="center" width="598px">
+                                                        <textarea th:field="*{description}" class="form-control-textarea text-area" rows="5" placeholder="Description"></textarea>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="diy-centered" style="height:10vh">
+                                            <table>
+                                                <tr>
+                                                    <td align="right">
+                                                        <input id="addDocumentButton" class="button btn" type="submit" style="width:150px" value="Add" onclick="javascript:setSequence('documents')">
+                                                    </td>
+                                                    <td align="left">
+                                                        <input id="cancelDocumentButton" class="button btn" type="button" value="Cancel" onclick="javascript:cancelSave('documents')">
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div th:if="${projectDetail.documentResources != null}">
+                                    <div th:each="p : ${projectDetail.documentResources}">
+                                        <div th:id="@{'document' + ${p.displaySequence}}" class="div-absolute-position div-absolute-position-centered" style="width:608px;display:none">
+                                            <input type="hidden" th:id="@{'documentId' + ${p.displaySequence}}" th:value="${p.id}" />
+                                            <input type="hidden" th:id="@{'documentTitle' + ${p.displaySequence}}" th:value="${p.title}" />
+                                            <input type="hidden" th:id="@{'documentDescription' + ${p.displaySequence}}" th:value="${p.description}" />
+                                            <input type="hidden" th:id="@{'documentDisplaySequence' + ${p.displaySequence}}" th:value="${p.displaySequence}" />
+                                            <input type="hidden" th:id="@{'documentLocalResourceSequence' + ${p.displaySequence}}" th:value="${p.localResourceSequence}" />
+                                            <div style="position:absolute;width:608px">
+                                                <table style="width:100%;padding:10px" border="0">
+                                                    <tr>
+                                                        <td align="right" width="95%"><a href="#" title="Edit Document" th:if="${!session.isSharedProject}"><img alt="Delete" src="/images/diy-project-edit.png" width="30px" height="30px" onclick="javascript:editResourceTypeElement('document')"></a></td>
+                                                        <td align="right" th:if="${!session.isSharedProject}"><a href="#" title="Delete Document" th:href="@{'/workshop/project/' + ${projectDetail.id} + '/localresource/delete/' + ${p.id} + '/' + ${p.resourceType}}"><img alt="Delete" src="/images/diy-project-delete.png" width="30px" height="30px"></a></td>
+                                                        <td align="right" th:if="${!session.isSharedProject}"><a href="#" title="Add Document"><img alt="Add" src="/images/diy-project-add.png" width="34px" height="34px" onclick="javascript:addResourceTypeElement('document')"></a></td>
+                                                        <td align="right"><a href="#" title="Open File" th:href="@{'/workshop/project/' + ${projectDetail.id} + '/localresource/view/' + ${p.id} + '/' + ${p.resourceType} + '/' + ${p.displaySequence}}"><img alt="Add" src="/images/open-file.png" width="31px" height="31px"></a></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div class="diy-full-centered" style="height:35vh">
+                                                <div class="diy-full-centered" style="width:98.25%;height:99%">
+                                                    <table border="0px" style="width:100%;">
+                                                        <tr>
+                                                            <td align="center">
+                                                                <img src="/images/default-file.png" style="object-fit:cover;height:25vh">
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="diy-centered" style="height:8vh">
+                                                <table>
+                                                    <tr>
+                                                        <td align="center" width="595px" class="carousel-nav">
+                                                            <span class="normal-font" th:text="@{${p.displaySequence} + ' / ' + ${#lists.size(projectDetail.documentResources)}}"></span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td align="center" width="595px" class="regular-font" th:text="${p.title}">
+                                                            File Title
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div class="diy-centered" style="overflow-y:auto;height:13vh">
+                                                <table>
+                                                    <tr>
+                                                        <td align="center" valign="top" width="598px" class="normal-font" th:text="${p.description}">
+                                                            This is the description of the file
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="documentNoMedia" class="div-absolute-position div-absolute-position-centered" style="width:608px;display:none;">
+                                    <table width="100%">
+                                        <tr>
+                                            <td align="center" class="normal-font">No Files to view</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center">
+                                                <img src="/images/no-documents.png">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div id="weblinks">
+                                <div id="createWeblink" class="div-absolute-position div-absolute-position-centered" style="width:608px;display:none;">
+                                    <form action="#" th:action="@{'/workshop/project/' + ${projectDetail.id} + '/webresource/add'}" th:object="${addProjectWebResource}" method="post">
+                                        <input type="hidden" name="id" th:value="${addProjectLocalResource.id}" />
+                                        <input type="hidden" name="webResourceSequence" th:value="${addProjectWebResource.webResourceSequence}" />
+                                        <input type="hidden" name="displaySequence" th:value="${addProjectWebResource.displaySequence}" />
+                                        <input type="hidden" name="type" th:value="WEB_RESOURCE" />
+                                        <div class="diy-centered" style="height:8vh">
+                                            <table>
+                                                <tr>
+                                                    <td align="center" width="605px">
+                                                        <input list="resourceTypesAddWithItems" class="form-control-textbox text-box" name="resourceType" placeholder="Type"/>
+                                                        <datalist id="resourceTypesAddWithItems" th:each="wr : ${projectDetail.webResourceTypes}">
+                                                            <option th:value="${wr}" value="Web Link">
+                                                        </datalist>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="diy-centered" style="height:8vh">
+                                            <table>
+                                                <tr>
+                                                    <td align="center" width="605px">
+                                                        <div th:if="${addProjectWebResourceErrors != null && addProjectWebResourceErrors.fieldErrorMessages != null && addProjectWebResourceErrors.fieldErrorMessages['link'] != null}">
+                                                            <input th:field="*{link}" class="form-control-textbox-error text-box" type="text" placeholder="http://link">
+                                                        </div>
+                                                        <div th:unless="${addProjectWebResourceErrors != null && addProjectWebResourceErrors.fieldErrorMessages != null && addProjectWebResourceErrors.fieldErrorMessages['link'] != null}">
+                                                            <input th:field="*{link}" class="form-control-textbox text-box" type="text" placeholder="http://link">
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="diy-centered" style="height:8vh">
+                                            <table>
+                                                <tr>
+                                                    <td align="center" width="605px">
+                                                        <div th:if="${addProjectWebResourceErrors != null && addProjectWebResourceErrors.fieldErrorMessages != null && addProjectWebResourceErrors.fieldErrorMessages['title'] != null}">
+                                                            <input th:field="*{title}" class="form-control-textbox-error text-box" type="text" placeholder="Title">
+                                                        </div>
+                                                        <div th:unless="${addProjectWebResourceErrors != null && addProjectWebResourceErrors.fieldErrorMessages != null && addProjectWebResourceErrors.fieldErrorMessages['title'] != null}">
+                                                            <input th:field="*{title}" class="form-control-textbox text-box" type="text" placeholder="Title">
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="diy-centered" style="height:10.5vh">
+                                            <table>
+                                                <tr>
+                                                    <td align="center" width="598px">
+                                                        <textarea th:field="*{description}" class="form-control-textarea text-area" rows="5" placeholder="Description"></textarea>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="diy-centered" style="height:10vh">
+                                            <table>
+                                                <tr>
+                                                    <td align="right">
+                                                        <input id="addWeblinkButton" class="button btn" type="submit" style="width:150px" value="Add" onclick="javascript:setSequence('weblinks')">
+                                                    </td>
+                                                    <td align="left">
+                                                        <input id="cancelWeblinkButton" class="button btn" type="button" value="Cancel" onclick="javascript:cancelSave('weblinks')">
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div th:if="${projectDetail.webResources != null}">
+                                    <div th:each="p : ${projectDetail.webResources}">
+                                        <div th:id="@{'weblink' + ${p.displaySequence}}" class="div-absolute-position div-absolute-position-centered" style="width:608px;display:none">
+                                            <input type="hidden" th:id="@{'weblinkId' + ${p.displaySequence}}" th:value="${p.id}" />
+                                            <input type="hidden" th:id="@{'weblinkTitle' + ${p.displaySequence}}" th:value="${p.title}" />
+                                            <input type="hidden" th:id="@{'weblinkDescription' + ${p.displaySequence}}" th:value="${p.description}" />
+                                            <input type="hidden" th:id="@{'weblinkLink' + ${p.displaySequence}}" th:value="${p.link}" />
+                                            <input type="hidden" th:id="@{'weblinkResourceType' + ${p.displaySequence}}" th:value="${p.resourceType}" />
+                                            <input type="hidden" th:id="@{'weblinkDisplaySequence' + ${p.displaySequence}}" th:value="${p.displaySequence}" />
+                                            <input type="hidden" th:id="@{'weblinkSequence' + ${p.displaySequence}}" th:value="${p.webResourceSequence}" />
+                                            <div style="position:absolute;width:608px">
+                                                <table style="width:100%;padding:10px" border="0">
+                                                    <tr>
+                                                        <td align="right" width="95%"><a href="#" title="Edit Web Resource" th:if="${!session.isSharedProject}"><img alt="Delete" src="/images/diy-project-edit.png" width="30px" height="30px" onclick="javascript:editWebResource()"></a></td>
+                                                        <td align="right" th:if="${!session.isSharedProject}"><a href="#" title="Delete Web Resource" th:href="@{'/workshop/project/' + ${projectDetail.id} + '/webresource/delete/' + ${p.id}}"><img alt="Delete" src="/images/diy-project-delete.png" width="30px" height="30px"></a></td>
+                                                        <td align="right" th:if="${!session.isSharedProject}"><a href="#" title="Add Web Resource"><img alt="Add" src="/images/diy-project-add.png" width="34px" height="34px" onclick="javascript:addWebResource()"></a></td>
+                                                        <td align="right"><a href="#" th:href="${p.link}" target="_blank" title="Open Link"><img alt="Open" src="/images/open-file.png" width="31px" height="31px"></a></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div class="diy-full-centered" style="height:35vh">
+                                                <div class="diy-full-centered" style="width:98.25%;height:99%">
+                                                    <table border="0px" style="width:100%;">
+                                                        <tr>
+                                                            <td align="center">
+                                                                <img src="/images/webpage-icon.png" style="object-fit:cover;height:10vh">
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="diy-centered" style="height:12vh">
+                                                <table>
+                                                    <tr>
+                                                        <td align="center" width="595px" class="carousel-nav">
+                                                            <span class="normal-font" th:text="@{${p.displaySequence} + ' / ' + ${#lists.size(projectDetail.webResources)}}"></span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td align="center" width="595px" class="regular-font" th:text="${p.title}">
+                                                            Project 1
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td align="center" width="595px" class="success-font" th:text="${p.resourceType}">
+                                                            Project 1
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div class="diy-centered" style="overflow-y:auto;height:9vh">
+                                                <table>
+                                                    <tr>
+                                                        <td align="center" valign="top" width="598px" class="normal-font" th:text="${p.description}">
+                                                            This is the description for the web resource
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="weblinkNoMedia" class="div-absolute-position div-absolute-position-centered" style="width:608px;display:none;">
+                                    <table width="100%">
+                                        <tr>
+                                            <td align="center" class="normal-font">No weblinks to view</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center">
+                                                <img src="/images/no-weblinks.png">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td valign="middle">
+                    <div id="right-nav" class="diy-full-centered" style="padding-left:20px;padding-right:20px">
+                        <img id="stopArrowRight" src="/images/end-navigation.jpeg" width="30px" height="30px" style="display:none;padding-bottom:5px">
+                        <a id="rightArrow" style="display:none;" href="#" title="Next Project">
+                            <img src="/images/right-arrow.png" width="30px" height="30px" onclick="javascript:nextItem()">
+                        </a>
+                    </div>
+                </td>
+                <td valign="middle">
+                    <div id="right-nav-shared" class="diy-full-centered" style="padding-left:16px;padding-right:24px;display:none">
+                        <img id="stopArrowRightShared" src="/images/end-navigation.jpeg" width="30px" height="30px" style="display:none;padding-bottom:5px">
+                        <a id="rightArrowShared" style="display:none;" href="#" title="Next Project">
+                            <img src="/images/right-arrow.png" width="30px" height="30px" onclick="javascript:nextSharedProject()">
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="diy-centered footer-navbar">
+        <div class="footer-navbar-item footer-font">
+            <table>
+                <tr align="center">
+                    <td>&#169; My DIY Workshop</td>
+                </tr>
+                <tr align="center">
+                    <td>raja.jeswanth@yahoo.com | +1 (612) 860-5364</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>

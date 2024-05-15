@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title>DIY Workshop - Error</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <!-- Favicon -->
+    <link href="/img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link href="/css/font.css" rel="stylesheet">
+
+    <!-- Google Web Fonts -->
+    <link href="/css/main.css" rel="stylesheet">
+    <div class="parent-navbar">
+        <div class="navbar-item header-font"><a class="menu-link" href="/">HOME</a></div>
+        <div class="navbar-item header-font"><a class="menu-link" href="/workshop/home">PROJECTS</a></div>
+        <div class="banner-item banner-font"><a class="menu-link" href="/">MY DIY WORKSHOP</a></div>
+        <div class="navbar-item header-font"><a class="menu-link" href="/signup">SIGN UP</a></div>
+        <div th:if="${loggedInUser != null && loggedInUser.name != null}" class="navbar-item header-font"><a class="menu-link" href="/logout">LOGOUT</a></div>
+        <div th:unless="${loggedInUser != null && loggedInUser.name != null}" class="navbar-item header-font"><a class="menu-link" href="/login">LOGIN</a></div>
+    </div>
+</head>
+<body>
+    <div class="diy-centered"style="height: 50vh">
+        <table>
+            <tr>
+                <td align="center" valign="bottom">
+                    <img src="/images/error.png" style="height:20vh">
+                </td>
+            </tr>
+            <tr>
+                <td class="normal-font" align="center">
+                    An unexpected error has occurred. Please try again.<br /><br />
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>

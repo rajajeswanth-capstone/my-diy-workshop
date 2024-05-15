@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title>DIY Workshop - Material</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <!-- Favicon -->
+    <link href="/img/favicon.ico" rel="icon">
+
+    <!-- Javascripts -->
+    <script src="/js/material.js"></script>
+
+    <!-- Google Web Fonts -->
+    <link href="/css/font.css" rel="stylesheet">
+
+    <!-- Google Web Fonts -->
+    <link href="/css/main.css" rel="stylesheet">
+    <div class="parent-navbar">
+        <div class="navbar-item header-font"><a class="menu-link" href="/">HOME</a></div>
+        <div class="navbar-item header-font"><a class="menu-link" href="/workshop/home">PROJECTS</a></div>
+        <div class="banner-item banner-font"><a class="menu-link" href="/">MY DIY WORKSHOP</a></div>
+        <div class="navbar-item header-font"><a class="menu-link" href="/signup">SIGN UP</a></div>
+        <div th:if="${loggedInUser != null && loggedInUser.name != null}" class="navbar-item header-font"><a class="menu-link" href="/logout">LOGOUT</a></div>
+        <div th:unless="${loggedInUser != null && loggedInUser.name != null}" class="navbar-item header-font"><a class="menu-link" href="/login">LOGIN</a></div>
+    </div>
+</head>
+<body onload="javascript:initMaterial()">
+<div class="diy-centered header-padding height-80v">
+    <input type="hidden" id="materialSize" th:value="${#lists.size(projectDetail.materials)}" value="0" />
+    <div th:if="${addProjectMaterialErrors != null}">
+        <input type="hidden" id="addMaterialErrors" value="true" />
+    </div>
+    <div th:unless="${addProjectMaterialErrors != null}">
+        <input type="hidden" id="addMaterialErrors" value="false" />
+    </div>
+
+    <table border="0">
+        <tr>
+            <td valign="top">
+                <div class="diy-centered">
+                    <div class="diy-block-display">
+                        <div class="diy-full-centered" style="height:7vh">
+                            <table style="background-color:#E67E22;padding:10px;height:40px;width:768px">
+                                <tr>
+                                    <td align="center" width="33.3%"><a href="#" th:href="@{'/workshop/project/detail/' + ${projectDetail.id}}" class="menu-link header-font">instructions</a></td>
+                                    <td align="center" width="33.3%"><a href="#" th:href="@{'/workshop/project/detail/material/' + ${projectDetail.id}}" class="menu-link header-font selected-sub-menu">material</a></td>
+                                    <td align="center" width="33.3%"><a href="#" th:href="@{'/workshop/project/media/' + ${projectDetail.id}}" class="menu-link header-font">media</a></td>
+                                    <td align="center" width="10%"><a href="/workshop/home" title="Back To Projects" class="menu-link header-font"><img alt="Back To Projects" src="/images/back-to-projects.png" width="15px" height="15px"></a></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="diy-centered" style="height:6vh">
+                            <table>
+                                <tr>
+                                    <td align="center" class="regular-font">MATERIAL</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div th:if="${!session.isSharedProject}" class="diy-centered" style="height:10vh;width:750px;">
+                            <div id="hasBudget" th:hidden="${projectDetail.budget == null}" class="div-absolute-position"  style="width: 720px">
+                                <table width="740px">
+                                    <tr>
+                                        <td align="center" width="165px">
+                                            <div class="diy-full-centered-with-border regular-font" style="width:98%;height:7.2vh">$<span id="projectBudget" th:text="${projectDetail.budget}"></span></div>
+                                        </td>
+                                        <td align="left" width="145px">
+                                            <a href="#" onclick="javascript:editBudget()"><input id="editBudget" class="button btn" type="button" style="width:145px;height:7.2vh" value="Edit"></a>
+                                        </td>
+                                        <td align="left" width="150px">
+                                            <a href="#" th:href="@{'/workshop/project/' + ${projectDetail.id} + '/budget/delete'}"><input id="deleteBudget" class="button btn" type="button" style="width:145px;height:7.2vh" value="Delete"></a>
+                                        </td>
+                                        <td align="center" width="180px">
+                                            <div th:if="${projectDetail.overBudget == true}">
+                                                <div class="diy-full-centered-with-border regular-font over-budget" style="height:7.2vh;width:100%">OVER BUDGET</div>
+                                            </div>
+                                            <div th:unless="${projectDetail.overBudget == true}">
+                                                <div class="diy-full-centered-with-border regular-font under-budget" style="height:7.2vh;width:100%">IN BUDGET</div>
+                                            </div>
+                                        </td>
+                                        <td align="left">
+                                            <a href="#" title="Add Material" onclick="javascript:addMaterial()" style="text-decoration:none"><div class="diy-full-centered-with-border regular-font under-budget" style="height:7.2vh;width:80px">ADD</div></a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div id="noBudget" th:hidden="${projectDetail.budget != null}" class="div-absolute-position"  style="width: 720px">
+                                <form action="#" th:action="@{'/workshop/project/' + ${projectDetail.id} + '/budget/add'}" th:object="${addProjectBudget}" method="post">
+                                    <table width="760px">
+                                        <tr>
+                                            <td align="center" width="280px">
+                                                <input th:field="*{budget}" class="form-control-textbox text-box" type="text" placeholder="Budget" style="height:5.6vh">
+                                                <input type="hidden" name="id" th:value="${projectDetail.id}" />
+                                            </td>
+                                            <td align="center">
+                                                <input id="addBudget" class="button btn" type="submit" style="width:150px;height:7.2vh" value="Set">
+                                            </td>
+                                            <td align="center" width="180px">
+                                                <div th:if="${projectDetail.budget != null}">
+                                                    <div th:if="${projectDetail.overBudget == true}">
+                                                        <div class="diy-full-centered-with-border regular-font over-budget" style="height:7.2vh;width:100%">OVER BUDGET</div>
+                                                    </div>
+                                                    <div th:unless="${projectDetail.overBudget == true}">
+                                                        <div class="diy-full-centered-with-border regular-font under-budget" style="height:7.2vh;width:100%">IN BUDGET</div>
+                                                    </div>
+                                                </div>
+                                                <div th:unless="${projectDetail.budget != null}">
+                                                    <div class="diy-full-centered-with-border regular-font no-budget" style="height:7.2vh;width:100%">NO BUDGET</div>
+                                                </div>
+                                            </td>
+                                            <td align="left">
+                                                <a href="#" title="Add Material" onclick="javascript:addMaterial()" style="text-decoration:none"><div class="diy-full-centered-with-border regular-font under-budget" style="height:7.2vh;width:80px">ADD</div></a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </form>
+                            </div>
+                        </div>
+                        <div id="material">
+                            <div id="createMaterial" class="div-absolute-position"  style="width:750px;display:none;">
+                                <div class="diy-centered" style="height:6vh">
+                                    <table>
+                                        <tr>
+                                            <td align="center" class="regular-font">ADD</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <form action="#" th:action="@{'/workshop/project/' + ${projectDetail.id} + '/material/add'}" th:object="${addProjectMaterial}" method="post">
+                                    <input type="hidden" name="id" th:value="${addProjectMaterial.id}" />
+                                    <input type="hidden" name="materialSequence" th:value="${addProjectMaterial.materialSequence}" />
+                                    <div class="diy-centered" style="height:8vh">
+                                        <table>
+                                            <tr>
+                                                <td align="center" width="605px">
+                                                    <input list="vendorItems" class="form-control-textbox text-box" name="vendor" placeholder="Vendor"/>
+                                                    <datalist id="vendorItems" th:each="wr : ${projectDetail.vendors}">
+                                                        <option th:value="${wr}" value="Home Depot">
+                                                    </datalist>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="diy-centered" style="height:8vh">
+                                        <table>
+                                            <tr>
+                                                <td align="center" width="605px">
+                                                    <div th:if="${addProjectMaterialErrors != null && addProjectMaterialErrors.fieldErrorMessages != null && addProjectMaterialErrors.fieldErrorMessages['materialDescription'] != null}">
+                                                        <input th:field="*{materialDescription}" class="form-control-textbox-error text-box" type="text" placeholder="Material Description">
+                                                    </div>
+                                                    <div th:unless="${addProjectMaterialErrors != null && addProjectMaterialErrors.fieldErrorMessages != null && addProjectMaterialErrors.fieldErrorMessages['materialDescription'] != null}">
+                                                        <input th:field="*{materialDescription}" class="form-control-textbox text-box" type="text" placeholder="Material Description">
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="diy-centered" style="height:8vh">
+                                        <table>
+                                            <tr>
+                                                <td align="center" width="605px">
+                                                    <div th:if="${addProjectMaterialErrors != null && addProjectMaterialErrors.fieldErrorMessages != null && addProjectMaterialErrors.fieldErrorMessages['units'] != null}">
+                                                        <input th:field="*{units}" class="form-control-textbox-error text-box" type="text" placeholder="Units">
+                                                    </div>
+                                                    <div th:unless="${addProjectMaterialErrors != null && addProjectMaterialErrors.fieldErrorMessages != null && addProjectMaterialErrors.fieldErrorMessages['units'] != null}">
+                                                        <input th:field="*{units}" class="form-control-textbox text-box" type="text" placeholder="Units">
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="diy-centered" style="height:8vh">
+                                        <table>
+                                            <tr>
+                                                <td align="center" width="605px">
+                                                    <div th:if="${addProjectMaterialErrors != null && addProjectMaterialErrors.fieldErrorMessages != null && addProjectMaterialErrors.fieldErrorMessages['pricePerUnit'] != null}">
+                                                        <input th:field="*{pricePerUnit}" class="form-control-textbox-error text-box" type="text" placeholder="Price Per Unit">
+                                                    </div>
+                                                    <div th:unless="${addProjectMaterialErrors != null && addProjectMaterialErrors.fieldErrorMessages != null && addProjectMaterialErrors.fieldErrorMessages['pricePerUnit'] != null}">
+                                                        <input th:field="*{pricePerUnit}" class="form-control-textbox text-box" type="text" placeholder="Price Per Unit">
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="diy-centered" style="height:10vh">
+                                        <table>
+                                            <tr>
+                                                <td align="right">
+                                                    <input id="addMaterialButton" class="button btn" type="submit" style="width:150px" value="Add" onclick="javascript:setMaterialSequence()">
+                                                </td>
+                                                <td align="left">
+                                                    <input id="cancelMaterialButton" class="button btn" type="button" value="Cancel" onclick="javascript:cancelSave()">
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="diy-centered" th:if="${projectDetail.materials != null && #lists.size(projectDetail.materials) > 0}">
+                                <div id="materialsList" class="div-absolute-position"  style="width: 730px">
+                                    <div class="diy-full-centered-with-border" style="height:8vh;width:733px;">
+                                        <div class="regular-font">$<span th:text="${#numbers.formatDecimal(projectDetail.totalProjectCost == null ? 0 : projectDetail.totalProjectCost, 0, 'COMMA', 2, 'POINT')}"></span></div>
+                                    </div>
+                                    <div class="diy-centered" style="padding-top:20px;width:755px;height:46vh;overflow-y:auto">
+                                        <div>
+                                            <table>
+                                                <tr height="40px">
+                                                    <th width="150" class="normal-font" align="left" valign="middle" style="font-weight:bold">Vendor</th>
+                                                    <th width="400" class="normal-font" align="left" valign="middle" style="font-weight:bold">Description</th>
+                                                    <th width="75" class="normal-font" align="left" valign="middle" style="font-weight:bold">Units</th>
+                                                    <th width="120" class="normal-font" align="left" valign="middle" style="font-weight:bold">Price</th>
+                                                    <th width="200" class="normal-font" align="left" valign="middle" style="font-weight:bold">Subtotal</th>
+                                                    <th></th>
+                                                    <th width="200" class="normal-font" align="left" valign="middle" colspan="2"><a href="#" target="_blank" title="Shopping List" th:href="@{'/workshop/project/print/material/' + ${projectDetail.id}}"><img alt="Delete" src="/images/shopping-cart.png" width="30px" height="30px"></a></th>
+                                                </tr>
+                                                <tr th:each="p : ${projectDetail.materials}">
+                                                    <td width="200" class="normal-font" valign="top" th:text="${p.vendor}"></td>
+                                                    <td width="450" class="normal-font" valign="top" th:text="${p.materialDescription}"></td>
+                                                    <td width="75" class="normal-font" valign="top" th:text="${p.units}"></td>
+                                                    <td width="120" class="normal-font" valign="top" th:text="@{'$' + ${p.pricePerUnit}}"></td>
+                                                    <td width="150" class="normal-font" valign="top">$<span th:text="${p.cost}"></span></td>
+                                                    <td width="50" class="normal-font" valign="top" th:if="${!session.isSharedProject}"><a href="#" title="Edit Material"><img alt="Edit" src="/images/diy-project-edit.png" width="30px" height="30px" onclick="javascript:editMaterial(this)"></a></td>
+                                                    <td width="50" class="normal-font" valign="top" th:if="${!session.isSharedProject}"><a href="#" title="Delete Material" th:href="@{'/workshop/project/' + ${projectDetail.id} + '/material/delete/' + ${p.id}}"><img alt="Delete" src="/images/diy-project-delete.png" width="30px" height="30px"></a></td>
+                                                    <td>
+                                                        <input type="hidden" th:name="@{'idValue'}" th:value="${p.id}" />
+                                                        <input type="hidden" th:name="@{'vendorValue'}" th:value="${p.vendor}" />
+                                                        <input type="hidden" th:name="@{'materialDescriptionValue'}" th:value="${p.materialDescription}" />
+                                                        <input type="hidden" th:name="@{'unitsValue'}" th:value="${p.units}" />
+                                                        <input type="hidden" th:name="@{'pricePerUnitValue'}" th:value="${p.pricePerUnit}" />
+                                                        <input type="hidden" th:name="@{'materialSequenceValue'}" th:value="${p.materialSequence}" />
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div th:unless="${projectDetail.materials != null && #lists.size(projectDetail.materials) > 0}">
+                                <div id="materialsList" class="div-absolute-position div-absolute-position-centered"  style="width:39%">
+                                    <table width="100%">
+                                        <tr>
+                                            <td align="center">
+                                                <div class="diy-centered normal-font" style="height:4vh">
+                                                    No Materials added yet
+                                                </div>
+                                                <div class="diy-centered">
+                                                    <img src="/images/no-materials.png">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="diy-centered footer-navbar">
+    <div class="footer-navbar-item footer-font">
+        <table>
+            <tr align="center">
+                <td>&#169; My DIY Workshop</td>
+            </tr>
+            <tr align="center">
+                <td>raja.jeswanth@yahoo.com | +1 (612) 860-5364</td>
+            </tr>
+        </table>
+    </div>
+</div>
+</body>
