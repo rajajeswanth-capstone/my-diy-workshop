@@ -15,5 +15,12 @@
                 <include>*-with-dependencies.jar</include>
             </includes>
         </fileSet>
+        <fileSet>
+            <outputDirectory>/</outputDirectory>
+            <directory>scripts/mac</directory>
+            <includes>
+                <include>*.sh</include>
+            </includes>
+        </fileSet>
     </fileSets>
 </assembly>
