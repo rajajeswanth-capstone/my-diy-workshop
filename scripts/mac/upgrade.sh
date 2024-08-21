@@ -8,7 +8,8 @@ echo $upgrade_version
 upgrade_directory=diy-workshop-$upgrade_version-release
 upgrade_file=diy-workshop-$upgrade_version-release.zip
 echo $upgrade_directory
-url=https://github.com/rajajeswanth-capstone/my-diy-workshop/blob/main/releases/diy-workshop-$upgrade_version-release.zip
+url=https://maven.pkg.github.com/rajajeswanth-capstone/my-diy-workshop/com/doityourself/workshop/diy-workshop/$upgrade_version/diy-workshop-$upgrade_version-release.zip
+curl '$url' -H "Authorization: Bearer <TOKEN>" -L -O
 if curl --output /dev/null --silent --head --fail "$url"; then
   curl -O $url
   unzip $upgrade_file

@@ -69,7 +69,13 @@
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
-
+	<distributionManagement>
+		<repository>
+			<id>github</id>
+			<name>GitHub OWNER Apache Maven Packages</name>
+			<url>https://maven.pkg.github.com/rajajeswanth-capstone/my-diy-workshop</url>
+		</repository>
+	</distributionManagement>
 	<build>
 		<plugins>
 			<plugin>
@@ -106,30 +112,6 @@
 							<descriptors>
 								<descriptor>assembly/release.xml</descriptor>
 							</descriptors>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>3.1.0</version>
-				<executions>
-					<execution>
-						<id>copy-resource-one</id>
-						<phase>install</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${basedir}/releases</outputDirectory>
-							<resources>
-								<resource>
-									<directory>target</directory>
-									<includes>
-										<include>*.zip</include>
-									</includes>
-								</resource>
-							</resources>
 						</configuration>
 					</execution>
 				</executions>
