@@ -77,6 +77,22 @@
 		</repository>
 	</distributionManagement>
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/version.txt</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<includes>
+					<include>**</include>
+				</includes>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -94,6 +110,24 @@
 						<configuration>
 							<classifier>jar-with-dependencies</classifier>
 							<mainClass>com.doityourself.workshop.DiyWorkshopApplication</mainClass>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.coderplus.maven.plugins</groupId>
+				<artifactId>copy-rename-maven-plugin</artifactId>
+				<version>1.0.1</version>
+				<executions>
+					<execution>
+						<id>rename-file</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>rename</goal>
+						</goals>
+						<configuration>
+							<sourceFile>${basedir}/target/classes/version.txt</sourceFile>
+							<destinationFile>${basedir}/src/main/resources/upgrade-version.txt</destinationFile>
 						</configuration>
 					</execution>
 				</executions>

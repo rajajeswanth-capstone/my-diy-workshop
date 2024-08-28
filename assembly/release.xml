@@ -23,4 +23,11 @@
             </includes>
         </fileSet>
     </fileSets>
+    <files>
+        <file>
+            <source>src/main/resources/upgrade-version.txt</source>
+            <outputDirectory>/</outputDirectory>
+            <destName>version.txt</destName>
+        </file>
+    </files>
 </assembly>
