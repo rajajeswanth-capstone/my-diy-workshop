@@ -5,6 +5,8 @@ import com.doityourself.workshop.database.entities.DiyUser;
 import com.doityourself.workshop.features.login.exception.LoginFailedException;
 import com.doityourself.workshop.features.login.representation.LoginUserRepresentation;
 import lombok.extern.slf4j.Slf4j;
+import org.jasypt.util.password.BasicPasswordEncryptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +33,9 @@ public class LoginValidations {
   @Value("${login.validation.password.fieldName}")
   String loginPasswordFieldName;
 
+  @Autowired
+  BasicPasswordEncryptor passwordEncryptor;
+
   /**
    * Method to validate {@link LoginUserRepresentation}
    *
@@ -53,9 +58,10 @@ public class LoginValidations {
    *
    * @param diyUser {@link DiyUser}
    */
-  public void validateDiyUserEntity(DiyUser diyUser) {
+  public void validateDiyUserEntity(DiyUser diyUser, LoginUserRepresentation user) {
     List<String> messages = new ArrayList<>();
     validateNullDiyUser(diyUser, messages);
+    validateDiyUserPassword(diyUser, user, messages);
 
     if (messages.size() > 0) {
       LoginFailedException exception = new LoginFailedException();
@@ -72,6 +78,21 @@ public class LoginValidations {
    */
   private void validateNullDiyUser(DiyUser user, List<String> messages) {
     if (Objects.isNull(user)) {
+      messages.add(loginFailedErrorMessage);
+    }
+  }
+
+  /**
+   * Method to validate {@link DiyUser} entity
+   *
+   * @param user {@link DiyUser}
+   * @param messages {@link List}&lt;{@link String}&gt;
+   */
+  private void validateDiyUserPassword(DiyUser diyUser, LoginUserRepresentation user, List<String> messages) {
+    if (messages.size() > 0) {
+      return;
+    }
+    if (!passwordEncryptor.checkPassword(user.getPassword(), diyUser.getPassword())) {
       messages.add(loginFailedErrorMessage);
     }
   }

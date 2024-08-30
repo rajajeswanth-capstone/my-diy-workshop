@@ -1,6 +1,7 @@
 package com.doityourself.workshop;
 
 import com.doityourself.workshop.common.filter.SessionFilter;
+import org.jasypt.util.password.BasicPasswordEncryptor;
 import org.springframework.boot.Banner;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -54,6 +55,11 @@ public class DiyWorkshopApplication {
 		bean.setUrlPatterns(Collections.singletonList("/workshop/*"));
 		bean.setOrder(1);
 		return bean;
+	}
+
+	@Bean
+	BasicPasswordEncryptor passwordEncryptor() {
+		return new BasicPasswordEncryptor();
 	}
 
 	/**

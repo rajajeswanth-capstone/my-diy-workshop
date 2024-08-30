@@ -48,12 +48,18 @@ public class LoginCommandTest {
     LoginValidations mockLoginValidations = Mockito.mock(LoginValidations.class);
     DiyUser diyUser = new DiyUser();
     diyUser.setId(1L);
-    CommandDTO commandDTO = CommandDTO.builder().add(EntityConstants.ENTITY_DIY_USER, diyUser).build();
+    LoginUserRepresentation loginUserRepresentation = new LoginUserRepresentation();
+    loginUserRepresentation.setUserName("test");
+    CommandDTO commandDTO = CommandDTO
+        .builder()
+        .add(EntityConstants.ENTITY_DIY_USER, diyUser)
+        .add(ContextConstants.CONTEXT_LOGIN_USER, loginUserRepresentation)
+        .build();
     LoginCommand loginCommand = new LoginCommand();
     loginCommand.loginValidations = mockLoginValidations;
 
     // Define Mocks
-    Mockito.doNothing().when(mockLoginValidations).validateDiyUserEntity(diyUser);
+    Mockito.doNothing().when(mockLoginValidations).validateDiyUserEntity(diyUser, loginUserRepresentation);
 
     // Execute
     Exception expectedException = null;
@@ -64,7 +70,7 @@ public class LoginCommandTest {
     }
 
     // Verify
-    Mockito.verify(mockLoginValidations, Mockito.times(1)).validateDiyUserEntity(diyUser);
+    Mockito.verify(mockLoginValidations, Mockito.times(1)).validateDiyUserEntity(diyUser, loginUserRepresentation);
 
     // Assertions
     assert expectedException == null;

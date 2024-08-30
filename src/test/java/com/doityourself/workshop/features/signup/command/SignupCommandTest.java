@@ -7,6 +7,7 @@ import com.doityourself.workshop.database.entities.DiyUser;
 import com.doityourself.workshop.features.signup.dao.SignupDao;
 import com.doityourself.workshop.features.signup.representation.SignupUserRepresentation;
 import com.doityourself.workshop.features.signup.validation.SignupValidations;
+import org.jasypt.util.password.BasicPasswordEncryptor;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
@@ -16,6 +17,7 @@ public class SignupCommandTest {
   public void testProcess() {
     // Initialize
     SignupDao mockSignupDao = Mockito.mock(SignupDao.class);
+    BasicPasswordEncryptor mockBasicPasswordEncryptor = Mockito.mock(BasicPasswordEncryptor.class);
 
     ArgumentCaptor<DiyUser> diyUserCaptor = ArgumentCaptor.forClass(DiyUser.class);
 
@@ -27,9 +29,11 @@ public class SignupCommandTest {
 
     SignupCommand command = new SignupCommand();
     command.signupDao = mockSignupDao;
+    command.passwordEncryptor = mockBasicPasswordEncryptor;
 
     // Define Mocks
     Mockito.when(mockSignupDao.saveUser(Mockito.any())).thenReturn(responseDiyUser);
+    Mockito.when(mockBasicPasswordEncryptor.encryptPassword("password")).thenReturn("password");
 
     // Execute
     Exception expectedException = null;

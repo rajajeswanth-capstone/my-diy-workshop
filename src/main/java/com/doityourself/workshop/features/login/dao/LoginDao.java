@@ -22,7 +22,7 @@ public class LoginDao {
    * @return {@link DiyUser}
    */
   public DiyUser findMatchingUser(LoginUserRepresentation user) {
-    return repository.findByUserNameAndPassword(user.getUserName(), user.getPassword());
+    return repository.findFirstByUserName(user.getUserName());
   }
 
   /**

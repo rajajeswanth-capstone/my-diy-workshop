@@ -3,7 +3,10 @@ package com.doityourself.workshop.features.login.validation;
 import com.doityourself.workshop.database.entities.DiyUser;
 import com.doityourself.workshop.features.login.exception.LoginFailedException;
 import com.doityourself.workshop.features.login.representation.LoginUserRepresentation;
+import com.doityourself.workshop.features.project.listing.dao.ProjectListingDao;
+import org.jasypt.util.password.BasicPasswordEncryptor;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 public class LoginValidationsTest {
   @Test
@@ -91,17 +94,26 @@ public class LoginValidationsTest {
     diyUser.setUserName("username");
     diyUser.setPassword("password");
 
+    LoginUserRepresentation loginUserRepresentation = new LoginUserRepresentation();
+    loginUserRepresentation.setUserName("username");
+    loginUserRepresentation.setPassword("password");
+
+    BasicPasswordEncryptor mockBasicPasswordEncryptor = Mockito.mock(BasicPasswordEncryptor.class);
+
     LoginValidations loginValidations = new LoginValidations();
+    loginValidations.passwordEncryptor = mockBasicPasswordEncryptor;
     loginValidations.loginFailedErrorMessage = "Login Failed";
     loginValidations.loginUsernameRequiredErrorMessage = "Username required";
     loginValidations.loginPasswordRequiredErrorMessage = "Password required";
     loginValidations.loginUsernameFieldName = "username";
     loginValidations.loginPasswordFieldName = "password";
 
+    Mockito.when(mockBasicPasswordEncryptor.checkPassword("password", "password")).thenReturn(true);
+
     // Execute
     Exception expectedException = null;
     try {
-      loginValidations.validateDiyUserEntity(diyUser);
+      loginValidations.validateDiyUserEntity(diyUser, loginUserRepresentation);
     } catch (Exception exception) {
       expectedException = exception;
     }
@@ -113,7 +125,9 @@ public class LoginValidationsTest {
   @Test
   public void testValidateDiyUserEntityNull() {
     // Initialize
+    BasicPasswordEncryptor mockBasicPasswordEncryptor = Mockito.mock(BasicPasswordEncryptor.class);
     LoginValidations loginValidations = new LoginValidations();
+    loginValidations.passwordEncryptor = mockBasicPasswordEncryptor;
     loginValidations.loginFailedErrorMessage = "Login Failed";
     loginValidations.loginUsernameRequiredErrorMessage = "Username required";
     loginValidations.loginPasswordRequiredErrorMessage = "Password required";
@@ -123,7 +137,7 @@ public class LoginValidationsTest {
     // Execute
     Exception expectedException = null;
     try {
-      loginValidations.validateDiyUserEntity(null);
+      loginValidations.validateDiyUserEntity(null, null);
     } catch (Exception exception) {
       expectedException = exception;
     }

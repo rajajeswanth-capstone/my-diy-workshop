@@ -8,6 +8,7 @@ import com.doityourself.workshop.database.entities.DiyUser;
 import com.doityourself.workshop.features.signup.dao.SignupDao;
 import com.doityourself.workshop.features.signup.representation.SignupUserRepresentation;
 import com.doityourself.workshop.features.signup.validation.SignupValidations;
+import org.jasypt.util.password.BasicPasswordEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +21,9 @@ public class SignupCommand implements ICommand<CommandDTO> {
   SignupValidations signupValidations;
 
   @Autowired
+  BasicPasswordEncryptor passwordEncryptor;
+
+  @Autowired
   SignupDao signupDao;
 
   /**
@@ -30,10 +34,13 @@ public class SignupCommand implements ICommand<CommandDTO> {
   @Override
   public void process(CommandDTO dto) {
     SignupUserRepresentation user = (SignupUserRepresentation) dto.get(ContextConstants.CONTEXT_LOGIN_USER);
+
+    String encryptedPassword = passwordEncryptor.encryptPassword(user.getPassword());
+
     DiyUser diyUser = signupDao.saveUser(
         DiyUser.builder()
             .userName(user.getUserName())
-            .password(user.getPassword())
+            .password(encryptedPassword)
             .name(user.getName())
             .build()
     );

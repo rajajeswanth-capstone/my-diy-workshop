@@ -25,7 +25,7 @@ public class LoginDaoTest {
     loginDao.repository = mockDiyUserRepository;
 
     // Define Mocks
-    Mockito.when(mockDiyUserRepository.findByUserNameAndPassword("username", "password")).thenReturn(responseDiyUser);
+    Mockito.when(mockDiyUserRepository.findFirstByUserName("username")).thenReturn(responseDiyUser);
 
     // Execute
     Exception expectedException = null;
@@ -37,7 +37,7 @@ public class LoginDaoTest {
     }
 
     // Verify
-    Mockito.verify(mockDiyUserRepository, Mockito.times(1)).findByUserNameAndPassword("username", "password");
+    Mockito.verify(mockDiyUserRepository, Mockito.times(1)).findFirstByUserName("username");
 
     // Assertions
     assert expectedException == null;

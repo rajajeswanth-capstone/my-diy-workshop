@@ -42,6 +42,9 @@ public class LoginCommand implements ICommand<CommandDTO> {
    */
   @Override
   public void postProcess(CommandDTO dto) {
-    loginValidations.validateDiyUserEntity((DiyUser) dto.get(EntityConstants.ENTITY_DIY_USER));
+    loginValidations.validateDiyUserEntity(
+        (DiyUser) dto.get(EntityConstants.ENTITY_DIY_USER),
+        (LoginUserRepresentation) dto.get(ContextConstants.CONTEXT_LOGIN_USER)
+    );
   }
 }
