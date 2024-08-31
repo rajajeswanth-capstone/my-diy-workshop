@@ -13,7 +13,7 @@ IF %CurrentVersion%==%UpgradeVersion% (
 ) ELSE (
 	echo Current version is %CurrentVersion%
 	echo Upgrade available to %UpgradeVersion%
-	echo Follow the instructions on https://github.com/rajajeswanth-capstone to upgrade to %UpgradeVersion%
+	echo Follow the instructions on https://github.com/rajajeswanth-capstone/my-diy-workshop#upgrade-software to upgrade to %UpgradeVersion%
 )
 
 pause

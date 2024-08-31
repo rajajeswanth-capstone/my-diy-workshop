@@ -11,5 +11,5 @@ then
 else
 	echo "Current version is $version"
 	echo "Upgrade available to $upgrade_version"
-	echo "Follow the instructions on <LINK> to upgrade to $upgrade_version"
+	echo "Follow the instructions on https://github.com/rajajeswanth-capstone/my-diy-workshop#upgrade-software to upgrade to $upgrade_version"
 fi
