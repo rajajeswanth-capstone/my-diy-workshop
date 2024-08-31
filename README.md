@@ -43,13 +43,13 @@ Check the below pre-requisites before installing the software.
 Follow the below instructions based upon your Operating System.
 ### Mac OSX
 - Open the Github Packages [link](https://github.com/rajajeswanth-capstone/my-diy-workshop/packages/) in a new tab. Click on the Do It Yourself Workshop package. The Github Packages page has the latest version of the software.
-- Download the *diy-workshop-X.X.X-release.zip* file and extract it. The extracted directory name will be *diy-workshop-X.X.X*
+- Download the ```diy-workshop-X.X.X-release.zip``` file and extract it. The extracted directory name will be ```diy-workshop-X.X.X```
 - Open Terminal and navigate to the software extracted directory (```diy-workshop-X.X.X```) on your machine.
 - Run ```sh start.sh``` to start the server. The server will start in few seconds.
 - Open browser and navigate to this [link](http://localhost:8080)
 ### Windows 10
 - Open the Github Packages [link](https://github.com/rajajeswanth-capstone/my-diy-workshop/packages/) in a new tab. Click on the Do It Yourself Workshop package. The Github Packages page has the latest version of the software.
-- Download the *diy-workshop-X.X.X-release.zip* file and extract it. The extracted directory name will be *diy-workshop-X.X.X*
+- Download the ```diy-workshop-X.X.X-release.zip``` file and extract it. The extracted directory name will be ```diy-workshop-X.X.X```
 - Open the software extracted directory (```diy-workshop-X.X.X```) in File Navigator.
 - Double click on ```start.bat``` to start the server. The server will start in few seconds.
 - Open browser and navigate to this [link](http://localhost:8080)
