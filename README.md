@@ -95,7 +95,7 @@ Follow the below instructions to upgrade software.
 - Start the server (check the ```Scripts > Mac OSX > Start``` or ```Scripts > Windows 10 > Start```)
 ---
 # Enhancements/Bug Reporting
-Report any bugs or request for enhancements by sending an email to the [Support E-mail](email:rajajeswanth-capstone@outlook.com)
+Report any bugs or request for enhancements by sending an email to the rajajeswanth-capstone@outlook.com
 
 
  
