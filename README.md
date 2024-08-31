@@ -87,12 +87,12 @@ To check for upgrades, follow the below instructions based upon the Operating Sy
 ---
 # Upgrade Software
 Follow the below instructions to upgrade software.
-- Stop the server (check the ```Scripts > Mac OSX > Stop``` or ```Scripts > Windows 10 > Stop```)
+- Stop the server (check the ```Scripts > Mac OSX > Stop``` or ```Scripts > Windows 10 > Stop``` section or click [this](https://github.com/rajajeswanth-capstone/my-diy-workshop#scripts) link)
 - Open the Github Packages [link](https://github.com/rajajeswanth-capstone/my-diy-workshop/packages/) in a new tab. Click on the Do It Yourself Workshop package. The Github Packages page has the latest version of the software.
 - Download the *diy-workshop-X.X.X-jar-with-dependencies.jar* file.
 - Navigate to the software directory (```diy-workshop-X.X.X```) on your machine.
 - Replace the *diy-workshop-X.X.X-jar-with-dependencies.jar* file with the new one.
-- Start the server (check the ```Scripts > Mac OSX > Start``` or ```Scripts > Windows 10 > Start```)
+- Start the server (check the ```Scripts > Mac OSX > Start``` or ```Scripts > Windows 10 > Start``` section or click [this](https://github.com/rajajeswanth-capstone/my-diy-workshop#scripts) link)
 ---
 # Enhancements/Bug Reporting
 Report any bugs or request for enhancements by sending an email to the rajajeswanth-capstone@outlook.com
