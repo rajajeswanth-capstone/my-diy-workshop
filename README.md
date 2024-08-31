@@ -44,45 +44,45 @@ Follow the below instructions based upon your Operating System.
 ### Mac OSX
 - Open the Github Packages [link](https://github.com/rajajeswanth-capstone/my-diy-workshop/packages/) in a new tab. Click on the Do It Yourself Workshop package. The Github Packages page has the latest version of the software.
 - Download the *diy-workshop-X.X.X-release.zip* file and extract it. The extracted directory name will be *diy-workshop-X.X.X*
-- Open Terminal and navigate to the extracted directory.
+- Open Terminal and navigate to the software extracted directory (```diy-workshop-X.X.X```) on your machine.
 - Run ```sh start.sh``` to start the server. The server will start in few seconds.
 - Open browser and navigate to this [link](http://localhost:8080)
 ### Windows 10
 - Open the Github Packages [link](https://github.com/rajajeswanth-capstone/my-diy-workshop/packages/) in a new tab. Click on the Do It Yourself Workshop package. The Github Packages page has the latest version of the software.
 - Download the *diy-workshop-X.X.X-release.zip* file and extract it. The extracted directory name will be *diy-workshop-X.X.X*
-- Open the extracted directory in File Navigator.
+- Open the software extracted directory (```diy-workshop-X.X.X```) in File Navigator.
 - Double click on ```start.bat``` to start the server. The server will start in few seconds.
 - Open browser and navigate to this [link](http://localhost:8080)
 ---
 # Scripts
 ## Mac OSX
 ### Start
-- Open Terminal and navigate to the extracted directory.
+- Open Terminal and navigate to the software extracted directory (```diy-workshop-X.X.X```) on your machine
 - Run ```sh start.sh``` to start the server. The server will start in few seconds.
 ### Stop
-- Open Terminal and navigate to the extracted directory.
+- Open Terminal and navigate to the software extracted directory (```diy-workshop-X.X.X```) on your machine
 - Run ```sh stop.sh``` to stop the server.
 ### Uninstall
-- Open Terminal and navigate to the extracted directory.
+- Open Terminal and navigate to the software extracted directory (```diy-workshop-X.X.X```) on your machine
 - Run ```sh uninstall.sh``` to uninstall the software.
 ## Windows 10
 ### Start
-- Open File Navigator and navigate to the extracted directory.
+- Open File Navigator and navigate to the software extracted directory (```diy-workshop-X.X.X```) on your machine
 - Double click ```start.bat``` to start the server. The server will start in few seconds.
 ### Stop
-- Open File Navigator and navigate to the extracted directory.
+- Open File Navigator and navigate to the software extracted directory (```diy-workshop-X.X.X```) on your machine
 - Double click ```stop.bat``` to stop the server.
 ### Uninstall
-- Open File Navigator and navigate to the extracted directory.
+- Open File Navigator and navigate to the software extracted directory (```diy-workshop-X.X.X```) on your machine
 - Double click ```uninstall.bat``` to uninstall the software.
 ---
 # Check for Upgrades
 To check for upgrades, follow the below instructions based upon the Operating System.
 ## Mac OSX
-- Open Terminal and navigate to the extracted directory.
+- Open Terminal and navigate to the software extracted directory (```diy-workshop-X.X.X```) on your machine.
 - Run ```sh check-upgrade.sh``` to check for upgrades.
 ## Windows 10
-- Open Terminal and navigate to the extracted directory.
+- Open File Navigator and navigate to the software extracted directory (```diy-workshop-X.X.X```) on your machine.
 - Double click ```check-upgrade.bat``` to check for upgrades.
 ---
 # Upgrade Software
@@ -90,7 +90,7 @@ Follow the below instructions to upgrade software.
 - Stop the server (check the ```Scripts > Mac OSX > Stop``` or ```Scripts > Windows 10 > Stop``` section or click [this](https://github.com/rajajeswanth-capstone/my-diy-workshop#scripts) link)
 - Open the Github Packages [link](https://github.com/rajajeswanth-capstone/my-diy-workshop/packages/) in a new tab. Click on the Do It Yourself Workshop package. The Github Packages page has the latest version of the software.
 - Download the *diy-workshop-X.X.X-jar-with-dependencies.jar* file.
-- Navigate to the software directory (```diy-workshop-X.X.X```) on your machine.
+- Navigate to the software extracted directory (```diy-workshop-X.X.X```) on your machine.
 - Replace the *diy-workshop-X.X.X-jar-with-dependencies.jar* file with the new one.
 - Start the server (check the ```Scripts > Mac OSX > Start``` or ```Scripts > Windows 10 > Start``` section or click [this](https://github.com/rajajeswanth-capstone/my-diy-workshop#scripts) link)
 ---
