@@ -42,13 +42,13 @@ Check the below pre-requisites before installing the software.
 # Install
 Follow the below instructions based upon your Operating System.
 ### Mac OSX
-- Open the Github Packages [link](https://github.com/rajajeswanth-capstone/my-diy-workshop) in a new tab. The Github Packages page has the latest version of the software.
+- Open the Github Packages [link](https://github.com/rajajeswanth-capstone/my-diy-workshop/packages/) in a new tab. Click on the Do It Yourself Workshop package. The Github Packages page has the latest version of the software.
 - Download the *diy-workshop-X.X.X-release.zip* file and extract it. The extracted directory name will be *diy-workshop-X.X.X*
 - Open Terminal and navigate to the extracted directory.
 - Run ```sh start.sh``` to start the server. The server will start in few seconds.
 - Open browser and navigate to this [link](http://localhost:8080)
 ### Windows 10
-- Open the Github Packages [link](https://github.com/rajajeswanth-capstone/my-diy-workshop) in a new tab. The Github Packages page has the latest version of the software.
+- Open the Github Packages [link](https://github.com/rajajeswanth-capstone/my-diy-workshop/packages/) in a new tab. Click on the Do It Yourself Workshop package. The Github Packages page has the latest version of the software.
 - Download the *diy-workshop-X.X.X-release.zip* file and extract it. The extracted directory name will be *diy-workshop-X.X.X*
 - Open the extracted directory in File Navigator.
 - Double click on ```start.bat``` to start the server. The server will start in few seconds.
@@ -88,7 +88,7 @@ To check for upgrades, follow the below instructions based upon the Operating Sy
 # Upgrade Software
 Follow the below instructions to upgrade software.
 - Stop the server (check the ```Scripts > Mac OSX > Stop``` or ```Scripts > Windows 10 > Stop```)
-- Open the Github Packages [link](https://github.com/rajajeswanth-capstone/my-diy-workshop) in a new tab. The Github Packages page has the latest version of the software.
+- Open the Github Packages [link](https://github.com/rajajeswanth-capstone/my-diy-workshop/packages/) in a new tab. Click on the Do It Yourself Workshop package. The Github Packages page has the latest version of the software.
 - Download the *diy-workshop-X.X.X-jar-with-dependencies.jar* file.
 - Navigate to the software directory (```diy-workshop-X.X.X```) on your machine.
 - Replace the *diy-workshop-X.X.X-jar-with-dependencies.jar* file with the new one.
