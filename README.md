@@ -92,6 +92,8 @@ Follow the below instructions to upgrade software.
 - Download the *diy-workshop-X.X.X-jar-with-dependencies.jar* file.
 - Navigate to the software extracted directory (```diy-workshop-X.X.X```) on your machine.
 - Replace the *diy-workshop-X.X.X-jar-with-dependencies.jar* file with the new one.
+- Delete the ```version.txt``` file from the software extracted directory (```diy-workshop-X.X.X```).
+- Rename the ```upgrade-version.txt``` file to ```version.txt``` in the software extracted directory (```diy-workshop-X.X.X```).
 - Start the server (check the ```Scripts > Mac OSX > Start``` or ```Scripts > Windows 10 > Start``` section or click [this](https://github.com/rajajeswanth-capstone/my-diy-workshop#scripts) link)
 ---
 # Enhancements/Bug Reporting
