@@ -29,6 +29,13 @@
                 <include>*.bat</include>
             </includes>
         </fileSet>
+        <fileSet>
+            <outputDirectory>/public</outputDirectory>
+            <directory>scripts/public</directory>
+            <excludes>
+                <exclude>*</exclude>
+            </excludes>
+        </fileSet>
     </fileSets>
     <files>
         <file>

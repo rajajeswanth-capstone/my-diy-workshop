@@ -28,6 +28,8 @@ function editInstruction(object) {
   const instructionSequenceValueElement = closestRow.querySelectorAll('[name="instructionSequenceValue"]')[0];
 
   const createInstructionElement = document.getElementById('createInstruction');
+  const addInstructionButton = document.getElementById('addInstructionButton');
+  const addInstructionTitle = document.getElementById('addInstructionTitle');
   const idFormElement = createInstructionElement.querySelectorAll('[name="id"]')[0];
   const titleFormElement = createInstructionElement.querySelectorAll('[name="title"]')[0];
   const instructionFormElement = createInstructionElement.querySelectorAll('[name="instruction"]')[0];
@@ -39,6 +41,9 @@ function editInstruction(object) {
   titleFormElement.value = titleValueElement.value
   instructionFormElement.value = instructionValueElement.value
   instructionSequenceFormElement.value = instructionSequenceValueElement.value
+
+  addInstructionButton.value = "Update";
+  addInstructionTitle.textContent = "UPDATE";
 
   instructionListElement.style.display = "none";
   createInstructionElement.style.display = "block";

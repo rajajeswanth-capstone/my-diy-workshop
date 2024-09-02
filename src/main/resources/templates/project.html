@@ -123,7 +123,7 @@
                                 <div class="diy-centered" style="height:6vh">
                                     <table>
                                         <tr>
-                                            <td align="center" class="regular-font">ADD</td>
+                                            <td align="center" class="regular-font" id="addInstructionTitle">ADD</td>
                                         </tr>
                                     </table>
                                 </div>
@@ -174,7 +174,7 @@
                                             <table th:each="p : ${projectDetail.instructions}" width="100%">
                                                 <tr>
                                                     <td class="regular-font" valign="top" th:text="${p.title}"></td>
-                                                    <td width="40" class="normal-font" valign="top" align="right" th:if="${!session.isSharedProject}"><a href="#" title="Edit Material"><img alt="Edit" src="/images/diy-project-edit.png" width="30px" height="30px" onclick="javascript:editInstruction(this)"></a></td>
+                                                    <td width="40" class="normal-font" valign="top" align="right" th:if="${!session.isSharedProject}"><a href="#" title="Edit Instruction"><img alt="Edit" src="/images/diy-project-edit.png" width="30px" height="30px" onclick="javascript:editInstruction(this)"></a></td>
                                                     <td width="40" class="normal-font" valign="top" align="right" th:if="${!session.isSharedProject}"><a href="#" title="Delete Instruction" th:href="@{'/workshop/project/' + ${projectDetail.id} + '/instruction/delete/' + ${p.id}}"><img alt="Delete" src="/images/diy-project-delete.png" width="30px" height="30px"></a></td>
                                                 </tr>
                                                 <tr>
@@ -220,7 +220,7 @@
                 <td>&#169; My DIY Workshop</td>
             </tr>
             <tr align="center">
-                <td>raja.jeswanth@yahoo.com | +1 (612) 860-5364</td>
+                <td>rajajeswanth-capstone@outlook.com | +1 (612) 860-5364</td>
             </tr>
         </table>
     </div>

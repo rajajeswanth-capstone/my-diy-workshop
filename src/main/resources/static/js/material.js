@@ -29,6 +29,8 @@ function editMaterial(object) {
   const pricePerUnitValueElement = closestRow.querySelectorAll('[name="pricePerUnitValue"]')[0];
   const materialSequenceValueElement = closestRow.querySelectorAll('[name="materialSequenceValue"]')[0];
 
+  const addMaterialButton = document.getElementById('addMaterialButton');
+  const addMaterialTitle = document.getElementById('addMaterialTitle');
   const createMaterialElement = document.getElementById('createMaterial');
   const idFormElement = createMaterialElement.querySelectorAll('[name="id"]')[0];
   const vendorFormElement = createMaterialElement.querySelectorAll('[name="vendor"]')[0];
@@ -45,6 +47,9 @@ function editMaterial(object) {
   unitsFormElement.value = unitsValueElement.value
   pricePerUnitFormElement.value = pricePerUnitValueElement.value
   materialSequenceFormElement.value = materialSequenceValueElement.value
+
+  addMaterialButton.value = "Update";
+  addMaterialTitle.textContent = "UPDATE";
 
   materialsListElement.style.display = "none";
   createMaterialElement.style.display = "block";
